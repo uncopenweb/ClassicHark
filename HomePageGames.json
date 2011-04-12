@@ -1,0 +1,117 @@
+{
+    "HarkInstructions": "Welcome to Hark The Sound. Use the arrow keys to choose a game to play. Use the \"up\" arrow to start a game.",
+        
+    "Games": [
+        { 
+            "url": "HarkTheSound/#Category-Walmart_Categories",
+            "Type": "Category",
+            "Name": "Walmart Categories",
+            "Description": "Walmart Categories: in this category game you learn about what items belong in the different departments in Walmart.",
+        },
+        { 
+            "url": "HarkTheSound/#Category-Learn_About_Food_Groups",
+            "Type": "Category",
+            "Name": "Learn About Food Groups",
+            "Description": "Learn About Food Groups: in this game you can learn about the different food groups, such as fruits, vegetables, breads, meats, and dairy.",
+        },
+        { 
+            "url": "HarkTheSound/#Naming-Musical_instruments",
+            "Type": "Naming",
+            "Name": "Musical Instruments",
+            "Description": "Name That Musical Instrument: try to guess the instrument from the sound it makes.",
+        },
+        { 
+            "url": "HarkTheSound/#Naming-Name_that_animal",
+            "Type": "Naming",
+            "Name": "Name That Animal",
+            "Description": "Name That Animal: a classic Hark the Sound guessing game.",
+        },
+        {
+            "url": "HarkTheSound/#Naming-Name_that_capitals_state",
+            "Type": "Naming",
+            "Name": "Name That State By Capital",
+            "Description": "Name That Capital's State: how well do you know the capitals of these states?",
+        },
+        { 
+            "url": "HarkTheSound/#Naming-Name_that_color",
+            "Type": "Naming",
+            "Name": "Name That Color",
+            "Description": "Name That Color: attempt to match common objects with their typical colors.",
+        },
+        { 
+            "url": "HarkTheSound/#Naming-Name_that_holiday",
+            "Type": "Naming",
+            "Name": "Name That Holiday",
+            "Description": "Name That Holiday: match these prompts with the corresponding holiday.",
+        },
+        { 
+            "url": "HarkTheSound/#Naming-Name_that_sound",
+            "Type": "Naming",
+            "Name": "Name That Sound",
+            "Description": "Name That Sound: identify environmental sounds.",
+        },
+        { 
+            "url": "HarkTheSound/#Naming-Spanish_Words",
+            "Type": "Naming",
+            "Name": "Spanish Words",
+            "Description": "Spanish Words: do you know the translation of these Spanish words into English?",
+        },
+        { 
+            "url": "HarkTheSound/#Naming-State_Nick_Names",
+            "Type": "Naming",
+            "Name": "State Nick Names",
+            "Description": "State Nick Names: match the state with its nick name.",
+        },
+        { 
+            "url": "HarkTheSound/#Math-Multiplication_Drills",
+            "Type": "Math",
+            "Name": "Multiplication Drills",
+            "Description": "Fun with addition",
+        },
+        { 
+            "url": "HarkTheSound/#Math-Addition_1_Through_5",
+            "Type": "Math",
+            "Name": "Addition 1 Through 5",
+            "Description": "Fun with addition",
+        },
+        { 
+            "url": "HarkTheSound/#Math-Addition_Easy_6_Through_10",
+            "Type": "Math",
+            "Name": "Addition Easy 6 Through 10",
+            "Description": "More fun with addition",
+        },
+        { 
+            "url": "HarkTheSound/#Math-Addition_Hard_6_Through_10",
+            "Type": "Math",
+            "Name": "Addition Hard 6 Through 10",
+            "Description": "More challenging addition",
+        },
+        { 
+            "url": "HarkTheSound/#Math-Counting",
+            "Type": "Math",
+            "Name": "Counting",
+            "Description": "How good are you at counting?",
+        },
+        { 
+            "url": "HarkTheSound/#Braille-Braille_letters",
+            "Type": "Braille",
+            "Name": "Braille Letters",
+            "Description": "Identify Braille letters given their dots.",
+        },
+        /*{ 
+            "url": "HarkTheSound/#Braille-Braille_Whole_Word_Contractions",
+           "Type": "Braille",
+            "Name": "Braille Whole Word Contractions",
+            "Description": "Identify Braille whole word contractions from their dots.",
+        },*/
+        { 
+            "url": "HarkTheSound/#Reaction-Coins_And_Barrels",
+            "Type": "Reaction",
+            "Name": "Coins And Barrels",
+            "Description": "Collect as many coins as possible while avoiding barrels.",
+        },
+
+    ]
+}
+
+

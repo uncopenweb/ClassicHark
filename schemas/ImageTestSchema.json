@@ -1,0 +1,23 @@
+{
+    "title":"Test Schema - Sound",
+    "description":"This form is for testing schemas with images",
+    "type":"object",
+    "properties": {
+        "name" : {
+            "type":"string",
+            "title":"Name:",
+            "description":"Enter a name for the schema"
+        },
+        "sounds" : {
+            "type":"array",
+            "title":"Sounds",
+            "description":"The images in this game",
+            "items" : {
+                "type":"string",
+                "format":"imageMedia",
+                "title":"Image"
+            }
+        }
+    }
+
+}

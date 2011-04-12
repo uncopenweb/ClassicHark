@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <script type="text/javascript">
+        var djConfig = {
+            isDebug: false,
+            parseOnLoad: true,
+            baseUrl: './',
+            modulePaths: { }
+        };
+    </script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/dojo/1.5.0/dojo/dojo.xd.js"></script>
+    <script type="text/javascript" src="/libs/uow/trace.js"></script>
+    <script type="text/javascript" src="/libs/uow.js"></script>
+    <script type="text/javascript">
+
+    function upload() {
+    
+        uow.getDatabase({database:'harkGames', collection:'NamingGames', mode:'c'}).addCallback(function(db) {
+        
+            //db.fetch({onComplete: function(items) {
+            //    console.log(items);
+            //}});
+            dojo.xhrGet({
+                url: "Naming_Games/Name_That_Capital's_State.json",
+                handleAs: "json",
+                load: function(data) {
+                    console.log(data);
+                    db.newItem(data);
+                    db.save();
+                    
+                }
+            });
+            
+        });
+    
+    }
+    
+    dojo.ready(upload);    
+
+    </script>
+    </head>
+    <body class="claro">
+        <div id="done"></div>
+    </body>
+</html>
