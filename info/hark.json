@@ -2,7 +2,7 @@
     "identifier" : "url",
     "items" : [
         {
-            "url" : "HarkTheSound/#Category-Walmart_Categories",
+            "url" : "ClassicHark/HarkTheSound/#Category-Walmart_Categories",
             "label" : {
                 "en-us" : "Walmart Categories"
             },
@@ -19,7 +19,7 @@
             "attribution" : ""
         },
 		{
-            "url" : "HarkTheSound/#Category-Learn_About_Food_Groups",
+            "url" : "ClassicHark/HarkTheSound/#Category-Learn_About_Food_Groups",
             "label" : {
                 "en-us" : "Food Group Categories"
             },
@@ -36,7 +36,7 @@
             "attribution" : ""
         },
 		{
-            "url" : "HarkTheSound/#Naming-Musical_instruments",
+            "url" : "ClassicHark/HarkTheSound/#Naming-Musical_instruments",
             "label" : {
                 "en-us" : "Name that Musical Instrument"
             },
@@ -53,7 +53,7 @@
             "attribution" : ""
         },
 		{
-            "url" : "HarkTheSound/#Naming-Name_that_animal",
+            "url" : "ClassicHark/HarkTheSound/#Naming-Name_that_animal",
             "label" : {
                 "en-us" : "Name that Animal"
             },
@@ -70,7 +70,7 @@
             "attribution" : ""
         },
 		{
-            "url" : "HarkTheSound/#Naming-Name_that_capitals_state",
+            "url" : "ClassicHark/HarkTheSound/#Naming-Name_that_capitals_state",
             "label" : {
                 "en-us" : "Name that State's Capital"
             },
@@ -87,7 +87,7 @@
             "attribution" : ""
         },
 		{
-            "url" : "HarkTheSound/#Naming-Name_that_color",
+            "url" : "ClassicHark/HarkTheSound/#Naming-Name_that_color",
             "label" : {
                 "en-us" : "Name That Color"
             },
@@ -104,7 +104,7 @@
             "attribution" : ""
         },
 		{
-            "url" : "HarkTheSound/#Naming-Name_that_holiday",
+            "url" : "ClassicHark/HarkTheSound/#Naming-Name_that_holiday",
             "label" : {
                 "en-us" : "Name that Holiday"
             },
@@ -121,7 +121,7 @@
             "attribution" : ""
         },
 		{
-            "url" : "HarkTheSound/#Naming-Name_that_sound",
+            "url" : "ClassicHark/HarkTheSound/#Naming-Name_that_sound",
             "label" : {
                 "en-us" : "Name that Sound"
             },
@@ -138,7 +138,7 @@
             "attribution" : ""
         },
 		{
-            "url" : "HarkTheSound/#Naming-Spanish_Words",
+            "url" : "ClassicHark/HarkTheSound/#Naming-Spanish_Words",
             "label" : {
                 "en-us" : "Name that Spanish Word"
             },
@@ -155,7 +155,7 @@
             "attribution" : ""
         },
 		{
-            "url" : "HarkTheSound/#Naming-State_Nick_Names",
+            "url" : "ClassicHark/HarkTheSound/#Naming-State_Nick_Names",
             "label" : {
                 "en-us" : "Name that State's Nick Name"
             },
@@ -172,7 +172,7 @@
             "attribution" : ""
         },
 		{
-            "url" : "HarkTheSound/#Math-Multiplication_Drills",
+            "url" : "ClassicHark/HarkTheSound/#Math-Multiplication_Drills",
             "label" : {
                 "en-us" : "Multiplication Drills"
             },
@@ -189,7 +189,7 @@
             "attribution" : ""
         },
 		{
-            "url" : "HarkTheSound/#Math-Addition_1_Through_5",
+            "url" : "ClassicHark/HarkTheSound/#Math-Addition_1_Through_5",
             "label" : {
                 "en-us" : "Addition 1 Through 5"
             },
@@ -206,7 +206,7 @@
             "attribution" : ""
         },
 		{
-            "url" : "HarkTheSound/#Math-Addition_Easy_6_Through_10",
+            "url" : "ClassicHark/HarkTheSound/#Math-Addition_Easy_6_Through_10",
             "label" : {
                 "en-us" : "Addition 6 Through 10"
             },
@@ -223,7 +223,7 @@
             "attribution" : ""
         },
 		{
-            "url" : "HarkTheSound/#Math-Addition_Hard_6_Through_10",
+            "url" : "ClassicHark/HarkTheSound/#Math-Addition_Hard_6_Through_10",
             "label" : {
                 "en-us" : "Addition Hard 6 Through 10"
             },
@@ -240,7 +240,7 @@
             "attribution" : ""
         },
 		{
-            "url" : "HarkTheSound/#Math-Counting",
+            "url" : "ClassicHark/HarkTheSound/#Math-Counting",
             "label" : {
                 "en-us" : "Counting"
             },
@@ -257,7 +257,7 @@
             "attribution" : ""
         },
 		{
-            "url" : "HarkTheSound/#Braille-Braille_letters",
+            "url" : "ClassicHark/HarkTheSound/#Braille-Braille_letters",
             "label" : {
                 "en-us" : "Braille Letters"
             },
@@ -274,7 +274,7 @@
             "attribution" : ""
         },
 		{
-            "url" : "HarkTheSound/#Reaction-Coins_And_Barrels",
+            "url" : "ClassicHark/HarkTheSound/#Reaction-Coins_And_Barrels",
             "label" : {
                 "en-us" : "Coins and Barrels"
             },
