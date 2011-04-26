@@ -282,7 +282,7 @@
                 "en-us" : "Collect as many coins as possible while avoiding barrels."
             },
             "tags" : {
-                "en-us" : "sound, positional, classic"
+                "en-us" : "spatial"
             },
             "media" : {
                 "icon": "ClassicHark/info/coin.png",
