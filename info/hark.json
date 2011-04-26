@@ -13,7 +13,7 @@
                 "en-us" : "category, classic"
             },
             "media" : {
-                "icon" : "",
+                "icon": "ClassicHark/info/Question.png",
                 "screenshots" : [""]
             },
             "attribution" : ""
@@ -30,7 +30,7 @@
                 "en-us" : "category, classic"
             },
             "media" : {
-                "icon" : "",
+                "icon": "ClassicHark/info/Question.png",
                 "screenshots" : [""]
             },
             "attribution" : ""
@@ -47,7 +47,7 @@
                 "en-us" : "naming, classic"
             },
             "media" : {
-                "icon" : "",
+                "icon": "ClassicHark/info/Question.png",
                 "screenshots" : [""]
             },
             "attribution" : ""
@@ -64,7 +64,7 @@
                 "en-us" : "naming, classic"
             },
             "media" : {
-                "icon" : "",
+                "icon": "ClassicHark/info/Question.png",
                 "screenshots" : [""]
             },
             "attribution" : ""
@@ -81,7 +81,7 @@
                 "en-us" : "naming, classic"
             },
             "media" : {
-                "icon" : "",
+                "icon": "ClassicHark/info/Question.png",
                 "screenshots" : [""]
             },
             "attribution" : ""
@@ -98,7 +98,7 @@
                 "en-us" : "naming, classic"
             },
             "media" : {
-                "icon" : "",
+                "icon": "ClassicHark/info/Question.png",
                 "screenshots" : [""]
             },
             "attribution" : ""
@@ -115,7 +115,7 @@
                 "en-us" : "naming, classic"
             },
             "media" : {
-                "icon" : "",
+                "icon": "ClassicHark/info/Question.png",
                 "screenshots" : [""]
             },
             "attribution" : ""
@@ -132,7 +132,7 @@
                 "en-us" : "naming, classic"
             },
             "media" : {
-                "icon" : "",
+                "icon": "ClassicHark/info/Question.png",
                 "screenshots" : [""]
             },
             "attribution" : ""
@@ -149,7 +149,7 @@
                 "en-us" : "naming, classic"
             },
             "media" : {
-                "icon" : "",
+                "icon": "ClassicHark/info/Question.png",
                 "screenshots" : [""]
             },
             "attribution" : ""
@@ -166,7 +166,7 @@
                 "en-us" : "naming, classic"
             },
             "media" : {
-                "icon" : "",
+                "icon": "ClassicHark/info/Question.png",
                 "screenshots" : [""]
             },
             "attribution" : ""
@@ -183,7 +183,7 @@
                 "en-us" : "math, classic"
             },
             "media" : {
-                "icon" : "",
+                "icon": "ClassicHark/info/Plus.png",
                 "screenshots" : [""]
             },
             "attribution" : ""
@@ -200,7 +200,7 @@
                 "en-us" : "math, classic"
             },
             "media" : {
-                "icon" : "",
+                "icon": "ClassicHark/info/Plus.png",
                 "screenshots" : [""]
             },
             "attribution" : ""
@@ -217,7 +217,7 @@
                 "en-us" : "math, classic"
             },
             "media" : {
-                "icon" : "",
+                "icon": "ClassicHark/info/Plus.png",
                 "screenshots" : [""]
             },
             "attribution" : ""
@@ -234,7 +234,7 @@
                 "en-us" : "math, classic"
             },
             "media" : {
-                "icon" : "",
+                "icon": "ClassicHark/info/Plus.png",
                 "screenshots" : [""]
             },
             "attribution" : ""
@@ -251,7 +251,7 @@
                 "en-us" : "math, classic"
             },
             "media" : {
-                "icon" : "",
+                "icon": "ClassicHark/info/Plus.png",
                 "screenshots" : [""]
             },
             "attribution" : ""
@@ -265,10 +265,10 @@
                 "en-us" : "Identify Braille letters given their dots."
             },
             "tags" : {
-                "en-us" : "braille, classic"
+                "en-us" : "Braille, classic"
             },
             "media" : {
-                "icon" : "",
+                "icon" : "ClassicHark/info/Braille.png",
                 "screenshots" : [""]
             },
             "attribution" : ""
@@ -285,7 +285,7 @@
                 "en-us" : "sound, positional, classic"
             },
             "media" : {
-                "icon" : "",
+                "icon": "ClassicHark/info/Question.png",
                 "screenshots" : [""]
             },
             "attribution" : ""
