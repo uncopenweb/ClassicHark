@@ -285,7 +285,7 @@
                 "en-us" : "sound, positional, classic"
             },
             "media" : {
-                "icon": "ClassicHark/info/Question.png",
+                "icon": "ClassicHark/info/coin.png",
                 "screenshots" : [""]
             },
             "attribution" : ""
