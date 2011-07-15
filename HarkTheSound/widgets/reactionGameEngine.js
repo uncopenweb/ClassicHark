@@ -8,6 +8,7 @@ dojo.require("dijit._Widget");
 dojo.require("dojo.cache");
 dojo.require("dijit._base.manager");
 
+dojo.subscribe('/org/hark/pause', this._pauseCallback);
 
 dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 
@@ -608,6 +609,16 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
         return toReturn;
     },
     
+	//Called when the game is paused without the 'p' button (such as when adjusting game volume)
+	_pauseCallBack: function(paused)
+	{
+		if(paused)
+			this._pause();
+			
+		else
+			this._restartGamePlay("this._pauseCallBack(paused)");
+	}
+	
     //  current just stops the functionality of the game
     _endGame: function() {
         this._gameIsOver = true;    //disables pause
