@@ -617,7 +617,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 			
 		else
 			this._restartGamePlay("this._pauseCallBack(paused)");*/
-	}
+	},
 	
     //  current just stops the functionality of the game
     _endGame: function() {
