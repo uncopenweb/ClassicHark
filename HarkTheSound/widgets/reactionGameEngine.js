@@ -612,6 +612,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 	//Called when the game is paused without the 'p' button (such as when adjusting game volume)
 	_pauseCallBack: function(paused)
 	{
+		alert(paused);
 		if(paused)
 			this._pause();
 			
