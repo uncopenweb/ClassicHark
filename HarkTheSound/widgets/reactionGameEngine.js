@@ -7,7 +7,7 @@ dojo.require("dijit._Templated");
 dojo.require("dijit._Widget");
 dojo.require("dojo.cache");
 dojo.require("dijit._base.manager");
-
+dojo.subscribe('/org/hark/pause', this._pauseCallback);
 dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 
     templateString: dojo.cache("HarkTheSound/widgets", "templates/reactionGameEngineTemplate.html"),
@@ -19,7 +19,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
     gameData: {}, 
 
     constructor: function() {
-		dojo.subscribe('/org/hark/pause', this._pauseCallback);
+		//dojo.subscribe('/org/hark/pause', this._pauseCallback);
 		
         this._loadingDialog = this._showDialog("Loading Screen", "The game is loading.");   
         this._loadingDialog._alreadyInitialized=false;    //user can not close now 
