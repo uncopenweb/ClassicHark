@@ -321,5 +321,5 @@ dojo.ready(function() {
 
 function prefsCallBack(prefs, which)
 {
-	alert(which);
+	
 }
