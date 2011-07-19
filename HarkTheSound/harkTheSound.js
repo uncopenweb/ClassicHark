@@ -68,7 +68,7 @@ dojo.declare('harkTheSound', null, {
 	//Called whenever the game is paused
 	_pauseCallBack: function(paused)
 	{
-	
+		alert('Whoo!');
 	},
 	
 	//Called whenever a preference (such as volume) changes
