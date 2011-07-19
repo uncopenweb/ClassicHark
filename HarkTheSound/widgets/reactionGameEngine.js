@@ -84,7 +84,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 	_pauseCallBack: function(paused)
 	{
 		if(paused)
-			this._pause();
+			this._pause(false);
 			
 		else
 			this._restartGamePlay("_pauseCallBack");
@@ -409,13 +409,13 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
                 evt.preventDefault();
                 if (this._currentlyReadingScore) {
                     this._dontFinishRead = true; 
-                    this._pause();
+                    this._pause(true);
                 }
                 else if (this._gameIsPaused) {    //restart gameplay
                     this._restartGamePlay("Analyzing 'P' Key");
                 }
                 else {    //otherwise pause it
-                    this._pause();
+                    this._pause(true);
                 }
             }
             else {}    //ignore the input
@@ -473,16 +473,19 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
     },
 
     // pause sequence for the game
-    _pause: function() {
+    _pause: function(conveyPaused) {
         this.waitingForResponse = false;    //will be set back to true by this._run() call
         this._stopGamePlayPlusTime("this._pause");
         this.timer.stop();    //edge case
-	
-        var pauseMessage = this._oneOf(this.pauseMessages);
-        this._audio.say({text : pauseMessage}).callBefore(dojo.hitch(this, function() 
-        {
-            this._changeGameImage(this._oneOf(this.pauseImages));
-        }));
+		
+		if(conveyPaused)
+		{
+			var pauseMessage = this._oneOf(this.pauseMessages);
+			this._audio.say({text : pauseMessage}).callBefore(dojo.hitch(this, function() 
+			{
+				this._changeGameImage(this._oneOf(this.pauseImages));
+			}));
+		}
     },
     
     // read off user score
