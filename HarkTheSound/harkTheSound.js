@@ -5,10 +5,9 @@ dojo.require('widgets.categoryGameEngine');
 dojo.require('widgets.reactionGameEngine');
 dojo.require('dojo.hash');
 
-dojo.subscribe('/org/hark/prefs/response', prefsCallBack);
-
 dojo.declare('harkTheSound', null, {
     constructor: function() {
+		dojo.subscribe('/org/hark/prefs/response', _prefsCallBack);
         var loadingDialog = dijit.byId("loadingDialog"); 
         loadingDialog.show();
         loadingDialog._alreadyInitialized=false;    //user can not close now 
@@ -63,6 +62,20 @@ dojo.declare('harkTheSound', null, {
             loadingDialog.hide();
         }));
     },
+	
+	//Called whenever a preference (such as volume) changes
+	_prefsCallBack: function(prefs, which)
+	{
+		_setSpeechRate(prefs.speechRate);
+	},
+
+	//Sets the speech rate of all the audio channels
+	_setSpeechRate: function(rate)
+	{
+		this.audio.setProperty({name : 'rate', channel : 'default', value : rate, immediate : true});
+		this.audio.setProperty({name : 'rate', channel : 'second', value : rate, immediate : true});
+		this.audio.setProperty({name : 'rate', channel : 'endGame', value : rate, immediate : true});
+	},
     
     //decides what to do with a hash    
     _handleHash: function(hash) {
@@ -318,17 +331,3 @@ dojo.declare('harkTheSound', null, {
 dojo.ready(function() {
     var app = new harkTheSound();        
 });
-
-//Called whenever a preference (such as volume) changes
-function prefsCallBack(prefs, which)
-{
-	setSpeechRate(prefs.speechRate);
-}
-
-//Sets the speech rate of all the audio channels
-function setSpeechRate(rate)
-{
-	this._audio.setProperty({name : 'rate', channel : 'default', value : rate, immediate : true});
-	this._audio.setProperty({name : 'rate', channel : 'second', value : rate, immediate : true});
-	this._audio.setProperty({name : 'rate', channel : 'endGame', value : rate, immediate : true});
-}
