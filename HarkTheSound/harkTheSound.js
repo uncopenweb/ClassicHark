@@ -7,7 +7,6 @@ dojo.require('dojo.hash');
 
 dojo.declare('harkTheSound', null, {
     constructor: function() {
-		dojo.subscribe('/org/hark/pause', this, "_pauseCallBack");
 		dojo.subscribe('/org/hark/prefs/response', this, "_prefsCallBack");
 		dojo.publish('/org/hark/prefs/request');
         var loadingDialog = dijit.byId("loadingDialog"); 
@@ -64,12 +63,6 @@ dojo.declare('harkTheSound', null, {
             loadingDialog.hide();
         }));
     },
-	
-	//Called whenever the game is paused
-	_pauseCallBack: function(paused)
-	{
-		
-	},
 	
 	//Called whenever a preference (such as volume) changes
 	_prefsCallBack: function(prefs, which)
