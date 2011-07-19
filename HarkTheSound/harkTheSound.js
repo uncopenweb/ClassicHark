@@ -22,7 +22,7 @@ dojo.declare('harkTheSound', null, {
 	},
 	
     constructor: function() {
-		dojo.subscribe('/org/hark/prefs/response', "_prefsCallBack");
+		dojo.subscribe('/org/hark/prefs/response', this, "_prefsCallBack");
         var loadingDialog = dijit.byId("loadingDialog"); 
         loadingDialog.show();
         loadingDialog._alreadyInitialized=false;    //user can not close now 
