@@ -5,6 +5,8 @@ dojo.require('widgets.categoryGameEngine');
 dojo.require('widgets.reactionGameEngine');
 dojo.require('dojo.hash');
 
+dojo.subscribe('/org/hark/prefs/response', prefsCallBack);
+
 dojo.declare('harkTheSound', null, {
     constructor: function() {
         var loadingDialog = dijit.byId("loadingDialog"); 
@@ -316,3 +318,8 @@ dojo.declare('harkTheSound', null, {
 dojo.ready(function() {
     var app = new harkTheSound();        
 });
+
+function prefsCallBack(prefs, which)
+{
+	alert(which);
+}

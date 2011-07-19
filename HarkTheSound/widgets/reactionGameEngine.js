@@ -8,8 +8,6 @@ dojo.require("dijit._Widget");
 dojo.require("dojo.cache");
 dojo.require("dijit._base.manager");
 
-dojo.subscribe('/org/hark/prefs/response', prefsCallBack);
-
 dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 
     templateString: dojo.cache("HarkTheSound/widgets", "templates/reactionGameEngineTemplate.html"),
@@ -640,8 +638,3 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
         this.destroyRecursive();
     }, 
 });
-
-function prefsCallBack(prefs, which)
-{
-	alert(which);
-}
