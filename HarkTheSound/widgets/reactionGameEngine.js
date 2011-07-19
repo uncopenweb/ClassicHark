@@ -83,7 +83,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 	//Called when the game is paused without the 'p' button
 	_pauseCallBack: function(pause)
 	{
-		alert('Whoo!');
+		
 	},
 
     // pops up game "instructions". 
