@@ -7,7 +7,7 @@ dojo.require('dojo.hash');
 
 dojo.declare('harkTheSound', null, {
     constructor: function() {
-		dojo.subscribe('/org/hark/pause', this, "_pauseCallback");
+		dojo.subscribe('/org/hark/pause', this, "_pauseCallBack");
 		dojo.subscribe('/org/hark/prefs/response', this, "_prefsCallBack");
 		dojo.publish('/org/hark/prefs/request');
         var loadingDialog = dijit.byId("loadingDialog"); 
