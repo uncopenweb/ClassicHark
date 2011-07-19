@@ -19,6 +19,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
     gameData: {}, 
 
     constructor: function() {
+		dojo.subscribe('/org/hark/pause', this, "_pauseCallBack");
         this._loadingDialog = this._showDialog("Loading Screen", "The game is loading.");   
         this._loadingDialog._alreadyInitialized=false;    //user can not close now 
 
@@ -47,6 +48,12 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
             dojo.publish("namingGameEngineStartup", ["constructor_ready"]);
         })); 
     },
+	
+	//Called when the game is paused without the 'p' button
+	_pauseCallBack: function(pause)
+	{
+	
+	}
 
     postCreate: function() {
         this.inherited(arguments);
