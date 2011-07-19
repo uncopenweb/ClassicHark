@@ -319,7 +319,16 @@ dojo.ready(function() {
     var app = new harkTheSound();        
 });
 
+//Called whenever a preference (such as volume) changes
 function prefsCallBack(prefs, which)
 {
-	
+	setSpeechRate(prefs.speechRate);
+}
+
+//Sets the speech rate of all the audio channels
+function setSpeechRate(rate)
+{
+	audio.setProperty({name : 'rate', channel : 'default', value : rate, immediate : true});
+	audio.setProperty({name : 'rate', channel : 'second', value : rate, immediate : true});
+	audio.setProperty({name : 'rate', channel : 'endGame', value : rate, immediate : true});
 }
