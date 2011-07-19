@@ -7,6 +7,7 @@ dojo.require('dojo.hash');
 
 dojo.declare('harkTheSound', null, {
     constructor: function() {
+		dojo.subscribe('/org/hark/pause', this, "_pauseCallback");
 		dojo.subscribe('/org/hark/prefs/response', this, "_prefsCallBack");
 		dojo.publish('/org/hark/prefs/request');
         var loadingDialog = dijit.byId("loadingDialog"); 
@@ -14,7 +15,7 @@ dojo.declare('harkTheSound', null, {
         loadingDialog._alreadyInitialized=false;    //user can not close now 
         this.currentlyHashing = false;
         this._keyHasGoneUp = true;
-        this._waitingForResponse = false; 
+        this._waitingForResponse = false;
         this.gameInProgress = false;
         this.optionsData = null;
         //handle hash now??
@@ -63,6 +64,12 @@ dojo.declare('harkTheSound', null, {
             loadingDialog.hide();
         }));
     },
+	
+	//Called whenever the game is paused
+	_pauseCallBack: function(paused)
+	{
+	
+	},
 	
 	//Called whenever a preference (such as volume) changes
 	_prefsCallBack: function(prefs, which)
