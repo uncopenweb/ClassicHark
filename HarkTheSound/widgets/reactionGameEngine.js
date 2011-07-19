@@ -19,7 +19,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
     gameData: {}, 
 
     constructor: function() {
-		dojo.subscribe('/org/hark/pause', this, "_pauseCallBack");
+		//dojo.subscribe('/org/hark/pause', this, "_pauseCallBack");
         this._loadingDialog = this._showDialog("Loading Screen", "The game is loading.");   
         this._loadingDialog._alreadyInitialized=false;    //user can not close now 
 
