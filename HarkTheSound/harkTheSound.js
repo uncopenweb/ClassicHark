@@ -4,7 +4,6 @@ dojo.require('widgets.namingGameEngine');
 dojo.require('widgets.categoryGameEngine');
 dojo.require('widgets.reactionGameEngine');
 dojo.require('dojo.hash');
-dojo.require('soundModule');
 
 dojo.declare('harkTheSound', null, {
     constructor: function() {
