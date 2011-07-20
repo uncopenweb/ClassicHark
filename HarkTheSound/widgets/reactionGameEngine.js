@@ -478,6 +478,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
         this._stopGamePlayPlusTime("this._pause");
         this.timer.stop();    //edge case
 		
+		//Doesn't always say that the game is paused (with the associated image), such as when the user is adjusting the volume or speech rate
 		if(conveyPaused)
 		{
 			var pauseMessage = this._oneOf(this.pauseMessages);
