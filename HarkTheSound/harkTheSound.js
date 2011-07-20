@@ -36,6 +36,9 @@ dojo.declare('harkTheSound', null, {
         var audioDef = uow.getAudio({defaultCaching: true});    //get JSonic
         audioDef.addCallback(dojo.hitch(this, function(audio) { 
             this.audio = audio;
+			
+			dojo.subscribe('/org/hark/prefs/response', this, "_prefsCallBack");
+			dojo.publish('/org/hark/prefs/request');
             //dojo.connect(dijit.byId("optionsButton"), "onClick", optionsFormDlg, "show"); //volume change possible
         }));
         var rewardImageRequest = {
@@ -60,9 +63,6 @@ dojo.declare('harkTheSound', null, {
             loadingDialog._alreadyInitialized = true;   //putting here does not assure anything!!!
             loadingDialog.hide();
         }));
-		
-		dojo.subscribe('/org/hark/prefs/response', this, "_prefsCallBack");
-		dojo.publish('/org/hark/prefs/request');
     },
 	
 	//Called whenever a preference (such as volume) changes
@@ -74,7 +74,6 @@ dojo.declare('harkTheSound', null, {
 	//Sets the speech rate of all the audio channels
 	_setSpeechRate: function(rate)
 	{
-		console.log("Audio: "+this.audio);
 		this.audio.setProperty({name : 'rate', channel : 'default', value : rate, immediate : true});
 		this.audio.setProperty({name : 'rate', channel : 'second', value : rate, immediate : true});
 		this.audio.setProperty({name : 'rate', channel : 'endGame', value : rate, immediate : true});
