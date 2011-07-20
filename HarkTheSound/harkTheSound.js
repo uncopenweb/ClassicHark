@@ -74,6 +74,7 @@ dojo.declare('harkTheSound', null, {
 	//Sets the speech rate of all the audio channels
 	_setSpeechRate: function(rate)
 	{
+		console.log("Audio: "+this.audio);
 		this.audio.setProperty({name : 'rate', channel : 'default', value : rate, immediate : true});
 		this.audio.setProperty({name : 'rate', channel : 'second', value : rate, immediate : true});
 		this.audio.setProperty({name : 'rate', channel : 'endGame', value : rate, immediate : true});
