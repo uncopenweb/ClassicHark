@@ -12,7 +12,7 @@ dojo.require('HarkTheSound/soundModule');
 dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 
     templateString: dojo.cache("HarkTheSound/widgets", "templates/reactionGameEngineTemplate.html"),
-	soundModule: null;
+	soundModule: null,
     widgetsInTemplate: true,
 
     hark: {}, 
