@@ -7,12 +7,12 @@ dojo.require("dijit._Templated");
 dojo.require("dijit._Widget");
 dojo.require("dojo.cache");
 dojo.require("dijit._base.manager");
-dojo.require('HarkTheSound/soundModule');
+//dojo.require('HarkTheSound/soundModule');
 
 dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 
     templateString: dojo.cache("HarkTheSound/widgets", "templates/reactionGameEngineTemplate.html"),
-	soundModule: null,
+	//soundModule: null,
     widgetsInTemplate: true,
 
     hark: {}, 
@@ -49,7 +49,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 			dojo.subscribe('/org/hark/pause', this, "_pauseCallBack");
         }));
 		
-		soundModule=new soundModule();
+		//soundModule=new soundModule();
     },
 
     postCreate: function() {
@@ -96,21 +96,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
     // pops up game "instructions". 
     // @todo: should let user know what the good and bad sounds are
     _doInstructions: function() { 
-        /**this._audio.say({text: this.instructions}).callBefore(dojo.hitch(this, function() {  
-            this._loadingDialog._alreadyInitialized=true;    //so that .hide will have effect   
-            this._loadingDialog.hide();
-            var instructionsDialog = this._showDialog("Instructions", this.instructions);      
-            dojo.connect(instructionsDialog, 'hide', dojo.hitch(this, function() {
-                this.exitedInstructions = true;
-                this._audio.stop().callAfter(dojo.hitch(this, function() {//clears queue   
-                    this._doneWithInitialScreens(); // have to wait or may trample gameplay sounds
-                }));              
-            }));
-            
-            this.readOffSounds();
-        }));*/
-		
-		soundModule.speak(this.instructions, 'default', false, dojo.hitch(this, function() {  
+        this._audio.say({text: this.instructions}).callBefore(dojo.hitch(this, function() {  
             this._loadingDialog._alreadyInitialized=true;    //so that .hide will have effect   
             this._loadingDialog.hide();
             var instructionsDialog = this._showDialog("Instructions", this.instructions);      
@@ -123,6 +109,20 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
             
             this.readOffSounds();
         }));
+		
+		/**soundModule.speak(this.instructions, 'default', false, dojo.hitch(this, function() {  
+            this._loadingDialog._alreadyInitialized=true;    //so that .hide will have effect   
+            this._loadingDialog.hide();
+            var instructionsDialog = this._showDialog("Instructions", this.instructions);      
+            dojo.connect(instructionsDialog, 'hide', dojo.hitch(this, function() {
+                this.exitedInstructions = true;
+                this._audio.stop().callAfter(dojo.hitch(this, function() {//clears queue   
+                    this._doneWithInitialScreens(); // have to wait or may trample gameplay sounds
+                }));              
+            }));
+            
+            this.readOffSounds();
+        }));*/
     },
     
     //  reads off the good and bad sounds during instructions.
