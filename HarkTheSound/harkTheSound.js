@@ -7,10 +7,6 @@ dojo.require('dojo.hash');
 
 dojo.declare('harkTheSound', null, {
     constructor: function() {
-		var masterVolume=0;
-		var speechVolume=0;
-		var soundVolume=0;
-	
         var loadingDialog = dijit.byId("loadingDialog"); 
         loadingDialog.show();
         loadingDialog._alreadyInitialized=false;    //user can not close now 
@@ -73,10 +69,6 @@ dojo.declare('harkTheSound', null, {
 	_prefsCallBack: function(prefs, which)
 	{
 		this._setSpeechRate(prefs.speechRate);
-		
-		this.masterVolume=prefs.volume;
-		this.speechVolume=prefs.speechVolume;
-		this.soundVolume=prefs.soundVolume;
 	},
 	
 	//Sets the speech rate of all the audio channels
