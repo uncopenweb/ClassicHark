@@ -4,7 +4,7 @@ dojo.require("dijit._Widget");
 dojo.provide("widgets.categoryGameEngine");
 dojo.require("dojox.json.ref");
 dojo.require("dojox.timing");
-
+dojo.require('soundModule');
  
 //set unused checkboxes etc to disabled
 
@@ -152,7 +152,7 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
             }
         }));
 		
-		/**_speak("welcome to " + this.gameData.Name, 'default', false, dojo.hitch(this, function() {
+		/**speak("welcome to " + this.gameData.Name, 'default', false, dojo.hitch(this, function() {
 			if(this) {
 				this.findVisibleImageArea();
 				this._runNextQuestion();
@@ -313,7 +313,7 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
             setTimeout(dojo.hitch(this, function(){this._waitingForResponse = true;}), this.promptTime*1000);    
         }));
 		
-		/**_speak(this._currentQuestion, 'default', false, dojo.hitch(this, function() {
+		/**speak(this._currentQuestion, 'default', false, dojo.hitch(this, function() {
 			//wait for timeout to accept response
 			setTimeout(dojo.hitch(this, function(){this._waitingForResponse = true;}), this.promptTime*1000);    
 		}));*/
@@ -342,7 +342,7 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
         this.choiceNode.innerHTML = "Choice: " + String(this._answerChoices[this._questionChoiceIndex].Name);
         this._audio.say({text: this._answerChoices[this._questionChoiceIndex].Name});
 		
-		//_speak(this._answerChoices[this._questionChoiceIndex].Name, 'default', true, function(){});
+		//speak(this._answerChoices[this._questionChoiceIndex].Name, 'default', true, function(){});
     },
     
     //  this was pulled out to allow hark frame to kill the game -- hashing
@@ -369,7 +369,7 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
             this._audio.stop();
             this._audio.say({text: "You must move through the choices before you can select an answer."});
 			
-			//_speak("You must move through the choices before you can select an answer.", 'default', true, function(){});
+			//speak("You must move through the choices before you can select an answer.", 'default', true, function(){});
         }
         else { //check if correct
             this._questionAttempts++;
@@ -422,7 +422,7 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
                 }
                 this._audio.stop({channel: "second"});  //else tooEarlySounds will queue up hit hit fast
                 this._audio.play({url: "Sounds/TooEarlyClick", channel : "second"});
-				//_playSound("Sounds/TooEarlyClick", 'second', true, function(){});
+				//playSound("Sounds/TooEarlyClick", 'second', true, function(){});
             }
         }
         else {
@@ -431,7 +431,7 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
             }
             this._audio.stop({channel: "second"});  //else tooEarlySounds will queue up hit hit fast
             this._audio.play({url: "Sounds/TooEarlyClick", channel : "second"});
-			//_playSound("Sounds/TooEarlyClick", 'second', true, function(){});
+			//playSound("Sounds/TooEarlyClick", 'second', true, function(){});
         }
     },
     
@@ -528,7 +528,7 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
             this._runNextQuestion();
         }));
         
-		/**_playSound(sound.url, 'default', true, dojo.hitch(this, function() 
+		/**playSound(sound.url, 'default', true, dojo.hitch(this, function() 
 		{
 				dojo.addClass("gameImage", "hidden");
 				this.gameImage.src = "images/white.jpg"; //because of chrome's display issues
@@ -561,7 +561,7 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
             }
         }));
 		
-		/**_speak(randomResponse, 'default', true, dojo.hitch(this, function() {
+		/**speak(randomResponse, 'default', true, dojo.hitch(this, function() {
 			if (doHint) {
 				var hints = dojo.map(this.correctThing.Hint, function(item){return item;});
 				this._randomize(hints);
@@ -581,14 +581,14 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
         if ((splitArray[0] == "Sounds") && (splitArray.length > 1)) { //then play it
             this._audio.stop();
             var def = this._audio.play({url: string});
-			//_playSound(string, 'default', true, function(){});
+			//playSound(string, 'default', true, function(){});
 			
             this.currentPrompt = "";
         }
         else {  //say it
             this._audio.stop();
             var def = this._audio.say({text: string});
-			//_speak(string, 'default', true, function(){});
+			//speak(string, 'default', true, function(){});
             this.currentPrompt = string;
         }
         return def;

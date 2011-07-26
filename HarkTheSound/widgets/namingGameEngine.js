@@ -5,6 +5,7 @@ dojo.require("dijit._Widget");
 dojo.require("dojox.timing");
 dojo.require("dojo.cache");
 dojo.require("dijit._base.manager");
+dojo.require('soundModule');
 
 dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
 
@@ -147,7 +148,7 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
             this._runNextQuestion();
         }));
 		
-		/**_speak("welcome to " + this.gameData.Name, 'default', false, dojo.hitch(this, function() {
+		/**speak("welcome to " + this.gameData.Name, 'default', false, dojo.hitch(this, function() {
             this._runNextQuestion();
         }));*/
     },
@@ -197,13 +198,13 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
         if ((splitArray[0] == "Sounds") && (splitArray.length > 1)) { //then play it
             this._audio.stop();
             var def = this._audio.play({url: string});
-			//_playSound(string, 'default', true, function(){});
+			//playSound(string, 'default', true, function(){});
             this.currentPrompt = "";
         }
         else {  //say it
             this._audio.stop();
             var def = this._audio.say({text: string});
-			//_speak(string, 'default', true, function(){});
+			//speak(string, 'default', true, function(){});
 			
             this.currentPrompt = string;
         }
@@ -339,7 +340,7 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
             this._runNextQuestion();
         }));
         
-		/**_playSound(sound.url, 'default', true, dojo.hitch(this, function() {
+		/**playSound(sound.url, 'default', true, dojo.hitch(this, function() {
             dojo.addClass("gameImage", "hidden");
             this.gameImage.src = "images/white.jpg"; //because of chrome's display issues
             if (this._choicesRemaining.length == 0) { //then moving on
@@ -485,7 +486,7 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
         if(!this._hasMoved) { //has not yet moved to select                        
             this._audio.stop();
             this._audio.say({text: "You must move through the choices before you can select an answer."});
-			//_speak("You must move through the choices before you can select an answer.", 'default', true, function(){});
+			//speak("You must move through the choices before you can select an answer.", 'default', true, function(){});
         }
         else { //check if correct
             this._questionAttempts++;
@@ -543,7 +544,7 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
                 }
                 this._audio.stop({channel: "second"});  //else tooEarlySounds will queue up hit hit fast
                 this._audio.play({url: "Sounds/TooEarlyClick", channel : "second"});
-				//_playSound("Sounds/TooEarlyClick", 'second', true, function(){});
+				//playSound("Sounds/TooEarlyClick", 'second', true, function(){});
             }
         }
         else {
@@ -552,7 +553,7 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
             }
             this._audio.stop({channel: "second"});  //else tooEarlySounds will queue up hit hit fast
             this._audio.play({url: "Sounds/TooEarlyClick", channel : "second"});
-			//_playSound("Sounds/TooEarlyClick", 'second', true, function(){});
+			//playSound("Sounds/TooEarlyClick", 'second', true, function(){});
         }
     },
     
