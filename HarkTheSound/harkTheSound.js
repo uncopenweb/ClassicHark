@@ -6,11 +6,11 @@ dojo.require('widgets.reactionGameEngine');
 dojo.require('dojo.hash');
 
 dojo.declare('harkTheSound', null, {
-	var masterVolume=0;
-	var speechVolume=0;
-	var soundVolume=0;
-	
     constructor: function() {
+		var masterVolume=0;
+		var speechVolume=0;
+		var soundVolume=0;
+	
         var loadingDialog = dijit.byId("loadingDialog"); 
         loadingDialog.show();
         loadingDialog._alreadyInitialized=false;    //user can not close now 
