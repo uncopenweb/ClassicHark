@@ -4,7 +4,7 @@ dojo.require("dijit._Widget");
 dojo.provide("widgets.categoryGameEngine");
 dojo.require("dojox.json.ref");
 dojo.require("dojox.timing");
-//dojo.require('HarkTheSound/soundModule');
+//dojo.require('HarkTheSound.soundModule');
  
 //set unused checkboxes etc to disabled
 
