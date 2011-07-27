@@ -5,7 +5,7 @@ dojo.require("dijit._Widget");
 dojo.require("dojox.timing");
 dojo.require("dojo.cache");
 dojo.require("dijit._base.manager");
-//dojo.require('ClassicHark.soundModule');
+//dojo.require('soundModule');
 
 dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
 
