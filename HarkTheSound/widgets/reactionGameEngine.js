@@ -7,7 +7,7 @@ dojo.require("dijit._Templated");
 dojo.require("dijit._Widget");
 dojo.require("dojo.cache");
 dojo.require("dijit._base.manager");
-dojo.require('soundModule');
+//dojo.require('soundModule');
 
 dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 
