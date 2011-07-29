@@ -2,7 +2,7 @@ dojo.provide('soundModule');
 
 dojo.declare('soundModule', null, 
 {
-	/**masterVolume: 0,
+	masterVolume: 0,
 	speechVolume: 0,
 	soundVolume: 0,
 	musicVolume: 0,
@@ -56,5 +56,5 @@ dojo.declare('soundModule', null,
 		
 		for(i=0;i<channelList.length;i++)
 			this._audio.setProperty({name : 'rate', channel : channelList[i], value : rate, immediate : true});
-	}*/
+	}
 });
