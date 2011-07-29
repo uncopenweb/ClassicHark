@@ -1,6 +1,6 @@
-dojo.provide('soundModule');
+dojo.provide('widgets.soundModule');
 
-dojo.declare('soundModule', null, 
+dojo.declare('widgets.soundModule', null, 
 {
 	masterVolume: 0,
 	speechVolume: 0,
