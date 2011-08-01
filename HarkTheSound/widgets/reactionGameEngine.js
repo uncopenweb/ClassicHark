@@ -12,7 +12,7 @@ dojo.require('widgets.soundModule');
 dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 
     templateString: dojo.cache("HarkTheSound/widgets", "templates/reactionGameEngineTemplate.html"),
-	//soundModule: null,
+	soundModule: null,
     widgetsInTemplate: true,
 
     hark: {}, 
@@ -39,6 +39,8 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
         var def = uow.getAudio({defaultCaching: true});    //get JSonic
         def.then(dojo.hitch(this, function(audio) {
             this._audio = audio;
+			soundModule=new widgets.soundModule(this._audio);
+			
             var constructorHandle = dojo.subscribe("namingGameEngineStartup", dojo.hitch(this, function(message){
                 if (message == "postCreate_ready" && !this.gameStarted) {
                     dojo.unsubscribe(constructorHandle);
@@ -48,8 +50,6 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
             dojo.publish("namingGameEngineStartup", ["constructor_ready"]);
 			dojo.subscribe('/org/hark/pause', this, "_pauseCallBack");
         }));
-		
-		//soundModule=new soundModule();
     },
 
     postCreate: function() {
@@ -96,21 +96,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
     // pops up game "instructions". 
     // @todo: should let user know what the good and bad sounds are
     _doInstructions: function() { 
-        this._audio.say({text: this.instructions}).callBefore(dojo.hitch(this, function() {  
-            this._loadingDialog._alreadyInitialized=true;    //so that .hide will have effect   
-            this._loadingDialog.hide();
-            var instructionsDialog = this._showDialog("Instructions", this.instructions);      
-            dojo.connect(instructionsDialog, 'hide', dojo.hitch(this, function() {
-                this.exitedInstructions = true;
-                this._audio.stop().callAfter(dojo.hitch(this, function() {//clears queue   
-                    this._doneWithInitialScreens(); // have to wait or may trample gameplay sounds
-                }));              
-            }));
-            
-            this.readOffSounds();
-        }));
-		
-		/**soundModule.speak(this.instructions, 'default', false, dojo.hitch(this, function() {  
+        /**this._audio.say({text: this.instructions}).callBefore(dojo.hitch(this, function() {  
             this._loadingDialog._alreadyInitialized=true;    //so that .hide will have effect   
             this._loadingDialog.hide();
             var instructionsDialog = this._showDialog("Instructions", this.instructions);      
@@ -123,6 +109,20 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
             
             this.readOffSounds();
         }));*/
+		
+		soundModule.speak(this.instructions, 'default', false, dojo.hitch(this, function() {  
+            this._loadingDialog._alreadyInitialized=true;    //so that .hide will have effect   
+            this._loadingDialog.hide();
+            var instructionsDialog = this._showDialog("Instructions", this.instructions);      
+            dojo.connect(instructionsDialog, 'hide', dojo.hitch(this, function() {
+                this.exitedInstructions = true;
+                this._audio.stop().callAfter(dojo.hitch(this, function() {//clears queue   
+                    this._doneWithInitialScreens(); // have to wait or may trample gameplay sounds
+                }));              
+            }));
+            
+            this.readOffSounds();
+        }));
     },
     
     //  reads off the good and bad sounds during instructions.
@@ -131,31 +131,33 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
         var goodSoundsCopy = dojo.map(this.goodSounds, function(item) {return item;});
         var badSoundsCopy = dojo.map(this.badSounds, function(item) {return item;}); 
         if(!this.exitedInstructions) {           
-            this._audio.say({text: "Here are the good sounds. You want to hit these."});
-			//speak("Here are the good sounds. You want to hit these.", 'default', false, function(){});
+            //this._audio.say({text: "Here are the good sounds. You want to hit these."});
+			soundModule.speak("Here are the good sounds. You want to hit these.", 'default', false, function(){});
+			
             while (goodSoundsCopy.length) { //just queuing up
                 //don't add anymore to queue if exited. queue cleared on exit
                 if (this.exitedInstructions) {} 
                 else{
                     var sound = goodSoundsCopy.pop();
-                    this._audio.say({text: "Here's the next good sound."});
-					//speak("Here's the next good sound.", 'default', false, function(){});
-                    this._audio.play({url: sound});
-					//playSound(sound, 'default', false, function(){});
+                    //this._audio.say({text: "Here's the next good sound."});
+					soundModule.speak("Here's the next good sound.", 'default', false, function(){});
+                    //this._audio.play({url: sound});
+					soundModule.playSound(sound, 'default', false, function(){});
                 } 
             }
             if(!this.exitedInstructions){// then do the bad ones
-                this._audio.say({text: "Here are the bad sounds. You do not want to hit these."});
-				//speak("Here are the bad sounds. You do not want to hit these.", 'default', false, function(){});
+                //this._audio.say({text: "Here are the bad sounds. You do not want to hit these."});
+				soundModule.speak("Here are the bad sounds. You do not want to hit these.", 'default', false, function(){});
+				
                 while (badSoundsCopy.length) { //just queuing up
                     //don't add anymore to queue if exited. queue cleared on exit
                     if (this.exitedInstructions) {} 
                     else{
                         var sound = badSoundsCopy.pop();
-                        this._audio.say({text: "Here's the next bad sound."});
-						//speak("Here's the next bad sound.", 'default', false, function(){});
-                        this._audio.play({url: sound});
-						//playSound(sound, 'default', false, function(){});						
+                        //this._audio.say({text: "Here's the next bad sound."});
+						soundModule.speak("Here's the next bad sound.", 'default', false, function(){});
+                        //this._audio.play({url: sound});
+						soundModule.playSound(sound, 'default', false, function(){});						
                     } 
                 }
 
@@ -216,19 +218,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
         if (this._gameIsPaused || this._gameIsOver) {}    //last time to catch end case of pause and end during sound play
         else {
             this.waitingForResponse = true;    //here to make stop calls useful
-            this._audio.play({url : soundPicked }).callAfter(dojo.hitch(this, function() 
-            { 
-                //last last chance sound will have played but we can still stop train wreck
-                if (this._gameIsPaused || this._gameIsOver){}    
-                else{
-                    if (this._responseSoundPlayed == true) {}	//then catch this edge case
-					else{
-                        this.timer.start();    //start counting now
-                    }
-                }
-            }));
-			
-			/**playSound(soundPicked, 'default', false, dojo.hitch(this, function() 
+            /**this._audio.play({url : soundPicked }).callAfter(dojo.hitch(this, function() 
             { 
                 //last last chance sound will have played but we can still stop train wreck
                 if (this._gameIsPaused || this._gameIsOver){}    
@@ -239,6 +229,18 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
                     }
                 }
             }));*/
+			
+			soundModule.playSound(soundPicked, 'default', false, dojo.hitch(this, function() 
+            { 
+                //last last chance sound will have played but we can still stop train wreck
+                if (this._gameIsPaused || this._gameIsOver){}    
+                else{
+                    if (this._responseSoundPlayed == true) {}	//then catch this edge case
+					else{
+                        this.timer.start();    //start counting now
+                    }
+                }
+            }));
         }
     },
 
@@ -328,21 +330,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
             break;
         }
 		
-        this._audio.say({text : words }).callAfter(dojo.hitch(this, function() 
-        {
-            if (this._gameHasEnded()) {    //if time has passed call for end
-                this._endGame();
-            }
-            else {	
-                if (this._gameIsPaused){    //then paused after badMove began so do nothing
-                }
-                else {    //continue running 
-                    this._run("anonymous function within this._badMove()"); 
-                }
-            }
-        }));  
-			
-		/**speak(words, 'default', false, dojo.hitch(this, function() 
+        /**this._audio.say({text : words }).callAfter(dojo.hitch(this, function() 
         {
             if (this._gameHasEnded()) {    //if time has passed call for end
                 this._endGame();
@@ -356,6 +344,20 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
             }
         }));*/
 			
+		soundModule.speak(words, 'default', false, dojo.hitch(this, function() 
+        {
+            if (this._gameHasEnded()) {    //if time has passed call for end
+                this._endGame();
+            }
+            else {	
+                if (this._gameIsPaused){    //then paused after badMove began so do nothing
+                }
+                else {    //continue running 
+                    this._run("anonymous function within this._badMove()"); 
+                }
+            }
+        }));
+			
         this.score = this.score - 10;  //should loose more points???
         this._updateScoreDisplay();
     },
@@ -368,7 +370,24 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
         var dayForScore = new Date();
         var currentTimeForScore = dayForScore.getTime();
         var sound = this._oneOf(this.rewardSounds);
-        this._audio.play({url : sound}).callAfter(dojo.hitch(this, function() 
+        /**this._audio.play({url : sound}).callAfter(dojo.hitch(this, function() 
+        {
+            if (this._gameHasEnded()) {    //if time has passed call for end
+                this._endGame();
+            }
+            else if(this._hitAScoreMilestone()) {
+                this._readScore();                
+            }
+            else {	
+                if (this._gameIsPaused){    //then paused after goodMove began so do nothing
+                }
+                else {    //continue running 
+                    this._run("anonymous function within this._goodMove()"); 
+                }
+            }			
+        }));*/
+		
+		soundModule.playSound(sound, 'default', false, dojo.hitch(this, function() 
         {
             if (this._gameHasEnded()) {    //if time has passed call for end
                 this._endGame();
@@ -384,23 +403,6 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
                 }
             }			
         }));
-		
-		/**playSound(sound, 'default', false, dojo.hitch(this, function() 
-        {
-            if (this._gameHasEnded()) {    //if time has passed call for end
-                this._endGame();
-            }
-            else if(this._hitAScoreMilestone()) {
-                this._readScore();                
-            }
-            else {	
-                if (this._gameIsPaused){    //then paused after goodMove began so do nothing
-                }
-                else {    //continue running 
-                    this._run("anonymous function within this._goodMove()"); 
-                }
-            }			
-        }));*/
 		
         //score update
         var difference = (currentTimeForScore - this._roundStartTime)/1000;
@@ -550,15 +552,15 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 		if(conveyPaused)
 		{
 			var pauseMessage = this._oneOf(this.pauseMessages);
-			this._audio.say({text : pauseMessage}).callBefore(dojo.hitch(this, function() 
-			{
-				this._changeGameImage(this._oneOf(this.pauseImages));
-			}));
-			
-			/**speak(pauseMessage, 'default', false, dojo.hitch(this, function() 
+			/**this._audio.say({text : pauseMessage}).callBefore(dojo.hitch(this, function() 
 			{
 				this._changeGameImage(this._oneOf(this.pauseImages));
 			}));*/
+			
+			soundModule.speak(pauseMessage, 'default', false, dojo.hitch(this, function() 
+			{
+				this._changeGameImage(this._oneOf(this.pauseImages));
+			}));
 		}
     },
     
@@ -569,18 +571,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
             this._stopGamePlayPlusTime("this._readScore()");
             var congratsOptions = [ "Congratulations! ", "Nice Job! ", "Fantastic! ", "Awesome! ", "Great Work! "];
             this._currentlyReadingScore = true;
-            this._audio.say({text: congratsOptions[Math.floor(Math.random()*congratsOptions.length)] + "You hit a score checkpoint, your score is now" + String(this.score)}).callAfter(dojo.hitch(this, function() 
-            {
-                if (this._dontFinishRead) {
-                    this._currentlyReadingScore = false;
-                    this._dontFinishRead = false;
-                }
-                else {
-                    this._restartGamePlay("this._readScore()"); 
-                }
-            }));
-			
-			/**speak(congratsOptions[Math.floor(Math.random()*congratsOptions.length)] + "You hit a score checkpoint, your score is now" + String(this.score), 'default', false, dojo.hitch(this, function() 
+            /**this._audio.say({text: congratsOptions[Math.floor(Math.random()*congratsOptions.length)] + "You hit a score checkpoint, your score is now" + String(this.score)}).callAfter(dojo.hitch(this, function() 
             {
                 if (this._dontFinishRead) {
                     this._currentlyReadingScore = false;
@@ -590,6 +581,17 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
                     this._restartGamePlay("this._readScore()"); 
                 }
             }));*/
+			
+			soundModule.speak(congratsOptions[Math.floor(Math.random()*congratsOptions.length)] + "You hit a score checkpoint, your score is now" + String(this.score), 'default', false, dojo.hitch(this, function() 
+            {
+                if (this._dontFinishRead) {
+                    this._currentlyReadingScore = false;
+                    this._dontFinishRead = false;
+                }
+                else {
+                    this._restartGamePlay("this._readScore()"); 
+                }
+            }));
         }
     },
 
@@ -712,12 +714,12 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
         this.waitingForResponse = false;    //ignore all keys for purpose of game
         this._changeGameImage(this._oneOf(this.endImages));
         this.ScoreString.innerHTML = "Your final score is: "; //change wording to final score
-        this._audio.play({url: this._oneOf(this.endSounds), channel: "endGame"});
-		//playSound(this._oneOf(this.endSounds), 'endGame', false, function(){});
+        //this._audio.play({url: this._oneOf(this.endSounds), channel: "endGame"});
+		soundModule.playSound(this._oneOf(this.endSounds), 'endGame', false, function(){});
 		
         //Say final score
-        this._audio.say({text: "Congratulations! Your final score is" + String(this.score)});
-		//speak("Congratulations! Your final score is" + String(this.score), 'default', false, function(){});
+        //this._audio.say({text: "Congratulations! Your final score is" + String(this.score)});
+		soundModule.speak("Congratulations! Your final score is" + String(this.score), 'default', false, function(){});
     },
     
     uninitialize: function() {
