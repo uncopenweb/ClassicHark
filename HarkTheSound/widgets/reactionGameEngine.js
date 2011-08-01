@@ -39,7 +39,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
         var def = uow.getAudio({defaultCaching: true});    //get JSonic
         def.then(dojo.hitch(this, function(audio) {
             this._audio = audio;
-			soundModule=new widgets.soundModule(this._audio);
+			this.soundModule=new widgets.soundModule(this._audio);
 			
             var constructorHandle = dojo.subscribe("namingGameEngineStartup", dojo.hitch(this, function(message){
                 if (message == "postCreate_ready" && !this.gameStarted) {
@@ -96,33 +96,33 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
     // pops up game "instructions". 
     // @todo: should let user know what the good and bad sounds are
     _doInstructions: function() { 
-        /**this._audio.say({text: this.instructions}).callBefore(dojo.hitch(this, function() {  
+        this.soundModule.getAudio().say({text: this.instructions}).callBefore(dojo.hitch(this, function() {  
             this._loadingDialog._alreadyInitialized=true;    //so that .hide will have effect   
             this._loadingDialog.hide();
             var instructionsDialog = this._showDialog("Instructions", this.instructions);      
             dojo.connect(instructionsDialog, 'hide', dojo.hitch(this, function() {
                 this.exitedInstructions = true;
-                this._audio.stop().callAfter(dojo.hitch(this, function() {//clears queue   
-                    this._doneWithInitialScreens(); // have to wait or may trample gameplay sounds
-                }));              
-            }));
-            
-            this.readOffSounds();
-        }));*/
-		
-		soundModule.speak(this.instructions, 'default', false, dojo.hitch(this, function() {  
-            this._loadingDialog._alreadyInitialized=true;    //so that .hide will have effect   
-            this._loadingDialog.hide();
-            var instructionsDialog = this._showDialog("Instructions", this.instructions);      
-            dojo.connect(instructionsDialog, 'hide', dojo.hitch(this, function() {
-                this.exitedInstructions = true;
-                this._audio.stop().callAfter(dojo.hitch(this, function() {//clears queue   
+                this.soundModule.getAudio().stop().callAfter(dojo.hitch(this, function() {//clears queue   
                     this._doneWithInitialScreens(); // have to wait or may trample gameplay sounds
                 }));              
             }));
             
             this.readOffSounds();
         }));
+		
+		/**this.soundModule.speak(this.instructions, 'default', false, dojo.hitch(this, function() {  
+            this._loadingDialog._alreadyInitialized=true;    //so that .hide will have effect   
+            this._loadingDialog.hide();
+            var instructionsDialog = this._showDialog("Instructions", this.instructions);      
+            dojo.connect(instructionsDialog, 'hide', dojo.hitch(this, function() {
+                this.exitedInstructions = true;
+                this.soundModule.getAudio().stop().callAfter(dojo.hitch(this, function() {//clears queue   
+                    this._doneWithInitialScreens(); // have to wait or may trample gameplay sounds
+                }));              
+            }));
+            
+            this.readOffSounds();
+        }));*/
     },
     
     //  reads off the good and bad sounds during instructions.
@@ -132,7 +132,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
         var badSoundsCopy = dojo.map(this.badSounds, function(item) {return item;}); 
         if(!this.exitedInstructions) {           
             //this._audio.say({text: "Here are the good sounds. You want to hit these."});
-			soundModule.speak("Here are the good sounds. You want to hit these.", 'default', false, function(){});
+			this.soundModule.speak("Here are the good sounds. You want to hit these.", 'default', false, function(){});
 			
             while (goodSoundsCopy.length) { //just queuing up
                 //don't add anymore to queue if exited. queue cleared on exit
@@ -140,14 +140,14 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
                 else{
                     var sound = goodSoundsCopy.pop();
                     //this._audio.say({text: "Here's the next good sound."});
-					soundModule.speak("Here's the next good sound.", 'default', false, function(){});
+					this.soundModule.speak("Here's the next good sound.", 'default', false, function(){});
                     //this._audio.play({url: sound});
-					soundModule.playSound(sound, 'default', false, function(){});
+					this.soundModule.playSound(sound, 'default', false, function(){});
                 } 
             }
             if(!this.exitedInstructions){// then do the bad ones
                 //this._audio.say({text: "Here are the bad sounds. You do not want to hit these."});
-				soundModule.speak("Here are the bad sounds. You do not want to hit these.", 'default', false, function(){});
+				this.soundModule.speak("Here are the bad sounds. You do not want to hit these.", 'default', false, function(){});
 				
                 while (badSoundsCopy.length) { //just queuing up
                     //don't add anymore to queue if exited. queue cleared on exit
@@ -155,9 +155,9 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
                     else{
                         var sound = badSoundsCopy.pop();
                         //this._audio.say({text: "Here's the next bad sound."});
-						soundModule.speak("Here's the next bad sound.", 'default', false, function(){});
+						this.soundModule.speak("Here's the next bad sound.", 'default', false, function(){});
                         //this._audio.play({url: sound});
-						soundModule.playSound(sound, 'default', false, function(){});						
+						this.soundModule.playSound(sound, 'default', false, function(){});						
                     } 
                 }
 
@@ -168,7 +168,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
     // called when loading and instruction screens are done. final setup before running game
     _doneWithInitialScreens: function() {
         this._exitedInstructions = true;
-		this._audio.stop();
+		this.soundModule.getAudio().stop();
         dojo.connect(dojo.global, 'onkeydown', this, '_analyzeKey');
         dojo.connect(dojo.global, 'onkeyup', this, '_removeKeyDownFlag');
         this._keyHasGoneUp = true;
@@ -230,7 +230,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
                 }
             }));*/
 			
-			soundModule.playSound(soundPicked, 'default', false, dojo.hitch(this, function() 
+			this.soundModule.playSound(soundPicked, 'default', false, dojo.hitch(this, function() 
             { 
                 //last last chance sound will have played but we can still stop train wreck
                 if (this._gameIsPaused || this._gameIsOver){}    
@@ -344,7 +344,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
             }
         }));*/
 			
-		soundModule.speak(words, 'default', false, dojo.hitch(this, function() 
+		this.soundModule.speak(words, 'default', false, dojo.hitch(this, function() 
         {
             if (this._gameHasEnded()) {    //if time has passed call for end
                 this._endGame();
@@ -387,7 +387,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
             }			
         }));*/
 		
-		soundModule.playSound(sound, 'default', false, dojo.hitch(this, function() 
+		this.soundModule.playSound(sound, 'default', false, dojo.hitch(this, function() 
         {
             if (this._gameHasEnded()) {    //if time has passed call for end
                 this._endGame();
@@ -505,7 +505,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
         if (this._currentlyReadingScore) {
             this._dontFinishRead = true;
         }
-        this._audio.stop();
+        this.soundModule.getAudio().stop();
         this.waitingForResponse = false;    //will be set back to true by this._run() call
         var day = new Date();
         var startPause = day.getTime();
@@ -524,7 +524,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
         //console.log("this._restartGamePlay called by: " + myCaller);
 		
         this._currentlyReadingScore = false;
-        this._audio.stop();
+        this.soundModule.getAudio().stop();
         var now = new Date();
         var endPause = now.getTime();
         this._timeSpentOnPause += (endPause - this._pauseStartTime);
@@ -552,15 +552,15 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 		if(conveyPaused)
 		{
 			var pauseMessage = this._oneOf(this.pauseMessages);
-			/**this._audio.say({text : pauseMessage}).callBefore(dojo.hitch(this, function() 
-			{
-				this._changeGameImage(this._oneOf(this.pauseImages));
-			}));*/
-			
-			soundModule.speak(pauseMessage, 'default', false, dojo.hitch(this, function() 
+			this.soundModule.getAudio().say({text : pauseMessage}).callBefore(dojo.hitch(this, function() 
 			{
 				this._changeGameImage(this._oneOf(this.pauseImages));
 			}));
+			
+			/**this.soundModule.speak(pauseMessage, 'default', false, dojo.hitch(this, function() 
+			{
+				this._changeGameImage(this._oneOf(this.pauseImages));
+			}));*/
 		}
     },
     
@@ -582,7 +582,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
                 }
             }));*/
 			
-			soundModule.speak(congratsOptions[Math.floor(Math.random()*congratsOptions.length)] + "You hit a score checkpoint, your score is now" + String(this.score), 'default', false, dojo.hitch(this, function() 
+			this.soundModule.speak(congratsOptions[Math.floor(Math.random()*congratsOptions.length)] + "You hit a score checkpoint, your score is now" + String(this.score), 'default', false, dojo.hitch(this, function() 
             {
                 if (this._dontFinishRead) {
                     this._currentlyReadingScore = false;
@@ -715,11 +715,11 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
         this._changeGameImage(this._oneOf(this.endImages));
         this.ScoreString.innerHTML = "Your final score is: "; //change wording to final score
         //this._audio.play({url: this._oneOf(this.endSounds), channel: "endGame"});
-		soundModule.playSound(this._oneOf(this.endSounds), 'endGame', false, function(){});
+		this.soundModule.playSound(this._oneOf(this.endSounds), 'endGame', false, function(){});
 		
         //Say final score
         //this._audio.say({text: "Congratulations! Your final score is" + String(this.score)});
-		soundModule.speak("Congratulations! Your final score is" + String(this.score), 'default', false, function(){});
+		this.soundModule.speak("Congratulations! Your final score is" + String(this.score), 'default', false, function(){});
     },
     
     uninitialize: function() {
@@ -732,7 +732,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
     
     //  this was pulled out to allow hark frame to kill the game -- hashing
     endGame: function() {
-        this._audio.stop();
+        this.soundModule.getAudio().stop();
         this._waitingForResponse = false;
         this.promptNode.innerHTML = "Prompt: ";
         this.choiceNode.innerHTML = "Choice: "

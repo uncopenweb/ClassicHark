@@ -12,6 +12,11 @@ dojo.declare('widgets.soundModule', null,
         this._audio = audio;
 	},
 	
+	getAudio: function()
+	{
+		return this._audio;
+	},
+	
 	//Speaks an utterance over a certain audio channel
 	speak: function(string, audioChannel, shouldStop, afterFunction)
 	{
@@ -30,5 +35,5 @@ dojo.declare('widgets.soundModule', null,
 			
 		//this._audio.setProperty({name : 'volume', channel : audioChannel, value : this.masterVolume*this.soundVolume, immediate : true});
 		this._audio.play({url : urlString, channel : audioChannel}).callAfter(afterFunction);
-	},
+	}
 });
