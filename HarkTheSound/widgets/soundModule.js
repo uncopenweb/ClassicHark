@@ -24,7 +24,7 @@ dojo.declare('widgets.soundModule', null,
 			this._audio.stop({channel : audioChannel});
 				
 		//this._audio.setProperty({name : 'volume', channel : audioChannel, value : this.masterVolume*this.speechVolume, immediate : true});
-		this._audio.say({text : string, channel : audioChannel}).callAfter(afterFunction);
+		return this._audio.say({text : string, channel : audioChannel}).callAfter(afterFunction);
 	},
 
 	//Plays a certain sound over a certain audio channel
@@ -34,6 +34,6 @@ dojo.declare('widgets.soundModule', null,
 			this._audio.stop({channel : audioChannel});
 			
 		//this._audio.setProperty({name : 'volume', channel : audioChannel, value : this.masterVolume*this.soundVolume, immediate : true});
-		this._audio.play({url : urlString, channel : audioChannel}).callAfter(afterFunction);
+		return this._audio.play({url : urlString, channel : audioChannel}).callAfter(afterFunction);
 	}
 });
