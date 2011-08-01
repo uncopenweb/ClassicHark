@@ -147,9 +147,6 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
         this.connect(dojo.global, 'onkeyup', '_removeKeyDownFlag');
         this.connect(dojo.global, 'onkeydown', '_analyzeKey');
         this.connect(dojo.global, 'onresize', 'resizeGameImage');
-       /** this._audio.say({ text: "welcome to " + this.gameData.Name }).callAfter(dojo.hitch(this, function() {
-            this._runNextQuestion();
-        }));*/
 		
 		this.soundModule.speak("welcome to " + this.gameData.Name, 'default', false, dojo.hitch(this, function() {
             this._runNextQuestion();
@@ -199,14 +196,10 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
     sayOrPlay: function(string) {
         var splitArray = string.split("/");
         if ((splitArray[0] == "Sounds") && (splitArray.length > 1)) { //then play it
-            //this._audio.stop();
-            //var def = this._audio.play({url: string});
 			var def=this.soundModule.playSound(string, 'default', true, function(){});
             this.currentPrompt = "";
         }
         else {  //say it
-            //this._audio.stop();
-            //var def = this._audio.say({text: string});
 			var def=this.soundModule.speak(string, 'default', true, function(){});
             this.currentPrompt = string;
         }
@@ -333,14 +326,6 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
         this._randomize(soundData);
         var sound = soundData.pop();
         this.soundModule.getAudio().stop();
-        /**this._audio.play({url: sound.url}).callAfter(dojo.hitch(this, function() {
-            dojo.addClass("gameImage", "hidden");
-            this.gameImage.src = "images/white.jpg"; //because of chrome's display issues
-            if (this._choicesRemaining.length == 0) { //then moving on
-                this._incrementThingIndex();
-            }
-            this._runNextQuestion();
-        }));*/
         
 		this.soundModule.playSound(sound.url, 'default', true, dojo.hitch(this, function() {
             dojo.addClass("gameImage", "hidden");
@@ -485,9 +470,7 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
     
     _chooseSequence: function(evt) {
         evt.preventDefault();
-        if(!this._hasMoved) { //has not yet moved to select                        
-            //this._audio.stop();
-            //this._audio.say({text: "You must move through the choices before you can select an answer."});
+        if(!this._hasMoved) { //has not yet moved to select
 			this.soundModule.speak("You must move through the choices before you can select an answer.", 'default', true, function(){});
         }
         else { //check if correct
@@ -544,18 +527,16 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
                 if (this.hark._keyIsDownArrow(evt) || this.hark._keyIsLeftArrow(evt) || this.hark._keyIsRightArrow(evt) || this.hark._keyIsUpArrow(evt)) {
                     evt.preventDefault();
                 }
-                //this._audio.stop({channel: "second"});  //else tooEarlySounds will queue up hit hit fast
-                //this._audio.play({url: "Sounds/TooEarlyClick", channel : "second"});
-				this.soundModule.playSound("Sounds/TooEarlyClick", 'second', true, function(){});
+				
+				this.soundModule.playSound("Sounds/TooEarlyClick", 'second', true, function(){}); //play tooEarlySound, stop audio channel to prevent tooEarlySounds from queuing up too fast and then all playing
             }
         }
         else {
             if (this.hark._keyIsDownArrow(evt) || this.hark._keyIsLeftArrow(evt) || this.hark._keyIsRightArrow(evt) || this.hark._keyIsUpArrow(evt)) {
                 evt.preventDefault();
             }
-            //this._audio.stop({channel: "second"});  //else tooEarlySounds will queue up hit hit fast
-            //this._audio.play({url: "Sounds/TooEarlyClick", channel : "second"});
-			this.soundModule.playSound("Sounds/TooEarlyClick", 'second', true, function(){});
+            
+			this.soundModule.playSound("Sounds/TooEarlyClick", 'second', true, function(){}); //play tooEarlySound, stop audio channel to prevent tooEarlySounds from queuing up too fast and then all playing
         }
     },
     

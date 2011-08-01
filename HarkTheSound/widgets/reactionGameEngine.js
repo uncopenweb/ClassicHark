@@ -497,11 +497,6 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 			{
 				this._changeGameImage(this._oneOf(this.pauseImages));
 			}));
-			
-			/**this.soundModule.speak(pauseMessage, 'default', false, dojo.hitch(this, function() 
-			{
-				this._changeGameImage(this._oneOf(this.pauseImages));
-			}));*/
 		}
     },
     
