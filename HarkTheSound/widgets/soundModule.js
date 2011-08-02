@@ -23,7 +23,7 @@ dojo.declare('widgets.soundModule', null,
 		if(shouldStop)
 			this._audio.stop({channel : audioChannel});
 				
-		this._audio.setProperty({name : 'volume', channel : audioChannel, value : this.masterVolume*this.speechVolume, immediate : true});
+		//this._audio.setProperty({name : 'volume', channel : audioChannel, value : this.masterVolume*this.speechVolume, immediate : true});
 		return this._audio.say({text : string, channel : audioChannel}).callAfter(afterFunction);
 	},
 
@@ -33,7 +33,7 @@ dojo.declare('widgets.soundModule', null,
 		if(shouldStop)
 			this._audio.stop({channel : audioChannel});
 			
-		this._audio.setProperty({name : 'volume', channel : audioChannel, value : this.masterVolume*this.soundVolume, immediate : true});
+		//this._audio.setProperty({name : 'volume', channel : audioChannel, value : this.masterVolume*this.soundVolume, immediate : true});
 		return this._audio.play({url : urlString, channel : audioChannel}).callAfter(afterFunction);
 	},
 	
