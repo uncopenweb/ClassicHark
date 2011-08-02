@@ -5,7 +5,6 @@ dojo.require("dijit._Widget");
 dojo.require("dojox.timing");
 dojo.require("dojo.cache");
 dojo.require("dijit._base.manager");
-dojo.require('widgets.soundModule');
 
 dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
 
@@ -14,7 +13,7 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
     widgetsInTemplate: true,
 
     hark: {}, 
-    soundModule: null,
+    
     gameData: {}, 
 
     constructor: function() {
@@ -31,15 +30,12 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
             this._updateOptions(data);
         }));
         var def = uow.getAudio({defaultCaching: true});    //get JSonic
-        def.addCallback(dojo.hitch(this, function(audio) {
+        def.addCallback(dojo.hitch(this, function(audio) { 
             this._audio = audio;
-			this.soundModule=new widgets.soundModule(this._audio);
-			
             this.audioSub = dojo.subscribe("audioVolume", dojo.hitch(this, function(newVolume){
                 this._audio.setProperty({name : 'volume', value: newVolume, immediate : true});
                 this._audio.setProperty({name : 'volume', value: newVolume, channel : 'second', immediate : true});
             }));
-			
             var constructorHandle = dojo.subscribe("namingGameEngineStartup", dojo.hitch(this, function(message){
                 if (message == "postCreate_ready" && !this.gameStarted) {
                     this._loadingDialog._alreadyInitialized = true;
@@ -147,8 +143,7 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
         this.connect(dojo.global, 'onkeyup', '_removeKeyDownFlag');
         this.connect(dojo.global, 'onkeydown', '_analyzeKey');
         this.connect(dojo.global, 'onresize', 'resizeGameImage');
-		
-		this.soundModule.speak("welcome to " + this.gameData.Name, 'default', false, dojo.hitch(this, function() {
+        this._audio.say({ text: "welcome to " + this.gameData.Name }).callAfter(dojo.hitch(this, function() {
             this._runNextQuestion();
         }));
     },
@@ -196,11 +191,13 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
     sayOrPlay: function(string) {
         var splitArray = string.split("/");
         if ((splitArray[0] == "Sounds") && (splitArray.length > 1)) { //then play it
-			var def=this.soundModule.playSound(string, 'default', true, function(){});
+            this._audio.stop();
+            var def = this._audio.play({url: string});
             this.currentPrompt = "";
         }
         else {  //say it
-			var def=this.soundModule.speak(string, 'default', true, function(){});
+            this._audio.stop();
+            var def = this._audio.say({text: string});
             this.currentPrompt = string;
         }
         return def;
@@ -325,9 +322,8 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
         var soundData = dojo.clone(this.hark.rewardSounds);
         this._randomize(soundData);
         var sound = soundData.pop();
-        this.soundModule.getAudio().stop();
-        
-		this.soundModule.playSound(sound.url, 'default', true, dojo.hitch(this, function() {
+        this._audio.stop();
+        this._audio.play({url: sound.url}).callAfter(dojo.hitch(this, function() {
             dojo.addClass("gameImage", "hidden");
             this.gameImage.src = "images/white.jpg"; //because of chrome's display issues
             if (this._choicesRemaining.length == 0) { //then moving on
@@ -335,6 +331,7 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
             }
             this._runNextQuestion();
         }));
+        
     },
     
     _badChoice: function() {
@@ -346,7 +343,7 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
         else{
             var doHint = false;
         }
-        this.soundModule.getAudio().stop();
+        this._audio.stop();
         var responses = ["Try Again", "Oops, try again", "You can do it, try again"];
         var randomResponse = responses[Math.floor(Math.random()*responses.length)];
         var def = this.sayOrPlay(randomResponse);
@@ -446,7 +443,7 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
     
     //  this was pulled out to allow hark frame to kill the game -- hashing
     endGame: function() {
-        this.soundModule.getAudio().stop();
+        this._audio.stop();
         this._waitingForResponse = false;
         this.promptNode.innerHTML = "Prompt: ";
         this.choiceNode.innerHTML = "Choice: "
@@ -470,8 +467,9 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
     
     _chooseSequence: function(evt) {
         evt.preventDefault();
-        if(!this._hasMoved) { //has not yet moved to select
-			this.soundModule.speak("You must move through the choices before you can select an answer.", 'default', true, function(){});
+        if(!this._hasMoved) { //has not yet moved to select                        
+            this._audio.stop();
+            this._audio.say({text: "You must move through the choices before you can select an answer."});
         }
         else { //check if correct
             this._questionAttempts++;
@@ -501,7 +499,7 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
                 }                
                 else if (this.hark._keyIsDownArrow(evt)) {
                     evt.preventDefault();
-                    this.soundModule.getAudio().stop();
+                    this._audio.stop();
                     this.playThingPrompt();
                 }
                 else if (this.hark._keyIsLeftArrow(evt)){ //then attempted to move
@@ -527,16 +525,16 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
                 if (this.hark._keyIsDownArrow(evt) || this.hark._keyIsLeftArrow(evt) || this.hark._keyIsRightArrow(evt) || this.hark._keyIsUpArrow(evt)) {
                     evt.preventDefault();
                 }
-				
-				this.soundModule.playSound("Sounds/TooEarlyClick", 'second', true, function(){}); //play tooEarlySound, stop audio channel to prevent tooEarlySounds from queuing up too fast and then all playing
+                this._audio.stop({channel: "second"});  //else tooEarlySounds will queue up hit hit fast
+                this._audio.play({url: "Sounds/TooEarlyClick", channel : "second"});
             }
         }
         else {
             if (this.hark._keyIsDownArrow(evt) || this.hark._keyIsLeftArrow(evt) || this.hark._keyIsRightArrow(evt) || this.hark._keyIsUpArrow(evt)) {
                 evt.preventDefault();
             }
-            
-			this.soundModule.playSound("Sounds/TooEarlyClick", 'second', true, function(){}); //play tooEarlySound, stop audio channel to prevent tooEarlySounds from queuing up too fast and then all playing
+            this._audio.stop({channel: "second"});  //else tooEarlySounds will queue up hit hit fast
+            this._audio.play({url: "Sounds/TooEarlyClick", channel : "second"});
         }
     },
     

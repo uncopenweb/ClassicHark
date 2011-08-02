@@ -4,8 +4,8 @@ dojo.require("dijit._Widget");
 dojo.provide("widgets.categoryGameEngine");
 dojo.require("dojox.json.ref");
 dojo.require("dojox.timing");
-dojo.require('widgets.soundModule');
 
+ 
 //set unused checkboxes etc to disabled
 
 dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
@@ -15,7 +15,7 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
     widgetsInTemplate: true,
 
     hark: {}, 
-    soundModule: null,
+    
     gameData: {},
     
     constructor: function() {    //load screen
@@ -39,13 +39,10 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
         def.addCallback(dojo.hitch(this, function(audio) 
         { 
             this._audio = audio;
-			this.soundModule=new widgets.soundModule(this._audio);
-			
             this.audioSub = dojo.subscribe("audioVolume", dojo.hitch(this, function(newVolume){
                 this._audio.setProperty({name : 'volume', value: newVolume, immediate : true});
                 this._audio.setProperty({name : 'volume', value: newVolume, channel : 'second', immediate : true});
             }));
-			
             var constructorHandle = dojo.subscribe("categoryGameEngineStartup", dojo.hitch(this, function(message){
                 if (message == "postCreate_ready" && !this.gameStarted) {
                     this._loadingDialog._alreadyInitialized = true;
@@ -148,13 +145,12 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
         this.findVisibleImageArea();
         this.connect(dojo.global, 'onkeydown', '_analyzeKey');
         this.connect(dojo.global, 'onkeyup', '_removeKeyDownFlag');
-		
-		this.soundModule.speak("welcome to " + this.gameData.Name, 'default', false, dojo.hitch(this, function() {
-			if(this) {
-				this.findVisibleImageArea();
-				this._runNextQuestion();
-			}
-		}));
+        this._audio.say({ text: "welcome to " + this.gameData.Name }).callAfter(dojo.hitch(this, function() {
+            if(this) {
+                this.findVisibleImageArea();
+                this._runNextQuestion();
+            }
+        }));
     },
   
     //  initiates everything to do with next question
@@ -305,11 +301,10 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
             this._currentQuestion = question;
         }
         else { console.log("New Question type added that hasn't been accounted for!!!");}
-		
-		this.soundModule.speak(this._currentQuestion, 'default', true, dojo.hitch(this, function() {
-			//wait for timeout to accept response
-			setTimeout(dojo.hitch(this, function(){this._waitingForResponse = true;}), this.promptTime*1000);    
-		}));
+        this._audio.say({text: this._currentQuestion}).callAfter(dojo.hitch(this, function() {
+            //wait for timeout to accept response
+            setTimeout(dojo.hitch(this, function(){this._waitingForResponse = true;}), this.promptTime*1000);    
+        }));
     },
     
     //  programmatically creates, shows, and return a dijit.dialog 
@@ -325,6 +320,7 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
   
     //  reads off the answer choice of this._questionChoiceIndex
     _updateDescription: function() {
+        this._audio.stop();
         var images = dojo.map(this._answerChoices[this._questionChoiceIndex].Picture, function(item){return item;});
         if (images.length >= 1 ){
             this._randomize(images);
@@ -332,13 +328,12 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
             this._changeGameImage(imageData);
         }
         this.choiceNode.innerHTML = "Choice: " + String(this._answerChoices[this._questionChoiceIndex].Name);
-        
-		this.soundModule.speak(this._answerChoices[this._questionChoiceIndex].Name, 'default', true, function(){});
+        this._audio.say({text: this._answerChoices[this._questionChoiceIndex].Name});
     },
     
     //  this was pulled out to allow hark frame to kill the game -- hashing
     endGame: function() {
-        this.soundModule.getAudio().stop();
+        this._audio.stop();
         this._waitingForResponse = false;
         this.choiceNode.innerHTML = "Choice: "
         //add node back in case another game instantiated
@@ -357,7 +352,8 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
     _chooseSequence: function(evt) {
         evt.preventDefault();
         if(!this._hasMoved) { //has not yet moved to select                        
-			this.soundModule.speak("You must move through the choices before you can select an answer.", 'default', true, function(){});
+            this._audio.stop();
+            this._audio.say({text: "You must move through the choices before you can select an answer."});
         }
         else { //check if correct
             this._questionAttempts++;
@@ -387,6 +383,7 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
                 }                
                 else if (this.hark._keyIsDownArrow(evt)) {
                     evt.preventDefault();
+                    this._audio.stop();
                     this._askQuestion();
                 }
                 else if (this.hark._keyIsLeftArrow(evt)){ //then attempted to move
@@ -407,16 +404,16 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
                 if (this.hark._keyIsDownArrow(evt) || this.hark._keyIsLeftArrow(evt) || this.hark._keyIsRightArrow(evt) || this.hark._keyIsUpArrow(evt)) {
                     evt.preventDefault();
                 }
-                
-				this.soundModule.playSound("Sounds/TooEarlyClick", 'second', true, function(){}); //play tooEarlySound, stop audio channel to prevent tooEarlySounds from queuing up too fast and then all playing
+                this._audio.stop({channel: "second"});  //else tooEarlySounds will queue up hit hit fast
+                this._audio.play({url: "Sounds/TooEarlyClick", channel : "second"});
             }
         }
         else {
             if (this.hark._keyIsDownArrow(evt) || this.hark._keyIsLeftArrow(evt) || this.hark._keyIsRightArrow(evt) || this.hark._keyIsUpArrow(evt)) {
                 evt.preventDefault();
             }
-            
-			this.soundModule.playSound("Sounds/TooEarlyClick", 'second', true, function(){}); //play tooEarlySound, stop audio channel to prevent tooEarlySounds from queuing up too fast and then all playing
+            this._audio.stop({channel: "second"});  //else tooEarlySounds will queue up hit hit fast
+            this._audio.play({url: "Sounds/TooEarlyClick", channel : "second"});
         }
     },
     
@@ -505,14 +502,14 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
         var soundData = dojo.clone(this.hark.rewardSounds);
         this._randomize(soundData);
         var sound = soundData.pop();
+        this._audio.stop();
+        this._audio.play({url: sound.url}).callAfter(dojo.hitch(this, function() {
+            dojo.addClass("gameImage", "hidden");
+            this.gameImage.src = "images/white.jpg"; //because of chrome's display issues
+            this._incrementCategoriesIndex();
+            this._runNextQuestion();
+        }));
         
-		this.soundModule.playSound(sound.url, 'default', true, dojo.hitch(this, function() 
-		{
-			dojo.addClass("gameImage", "hidden");
-			this.gameImage.src = "images/white.jpg"; //because of chrome's display issues
-			this._incrementCategoriesIndex();
-			this._runNextQuestion();
-		}));
     },
     
     _badChoice: function() {
@@ -526,18 +523,18 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
         }
         var responses = ["Try Again", "Oops, try again", "You can do it, try again"];
         var randomResponse = responses[Math.floor(Math.random()*responses.length)];
-		
-		this.soundModule.speak(randomResponse, 'default', true, dojo.hitch(this, function() {
-			if (doHint) {
-				var hints = dojo.map(this.correctThing.Hint, function(item){return item;});
-				this._randomize(hints);
-				var hint = hints.pop();
-				var def = this.sayOrPlay("Hint: " + hint);
-				def.callAfter(dojo.hitch(this, function() {
-					this._waitingForResponse = true;
-				}));
-			}
-		}));
+        this._audio.stop();
+        this._audio.say({text: randomResponse}).callAfter(dojo.hitch(this, function() {
+            if (doHint) {
+                    var hints = dojo.map(this.correctThing.Hint, function(item){return item;});
+                    this._randomize(hints);
+                    var hint = hints.pop();
+                    var def = this.sayOrPlay("Hint: " + hint);
+                    def.callAfter(dojo.hitch(this, function() {
+                        this._waitingForResponse = true;
+                    }));
+            }
+        }));
     },
     
     //  says or plays the string that is passed in. Assumes that if url passed it, root is "Sounds"
@@ -545,11 +542,13 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
     sayOrPlay: function(string) {
         var splitArray = string.split("/");
         if ((splitArray[0] == "Sounds") && (splitArray.length > 1)) { //then play it
-			var def=this.soundModule.playSound(string, 'default', true, function(){});
+            this._audio.stop();
+            var def = this._audio.play({url: string});
             this.currentPrompt = "";
         }
         else {  //say it
-			var def=this.soundModule.speak(string, 'default', true, function(){});
+            this._audio.stop();
+            var def = this._audio.say({text: string});
             this.currentPrompt = string;
         }
         return def;
