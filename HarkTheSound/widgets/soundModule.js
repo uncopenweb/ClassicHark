@@ -35,5 +35,12 @@ dojo.declare('widgets.soundModule', null,
 			
 		//this._audio.setProperty({name : 'volume', channel : audioChannel, value : this.masterVolume*this.soundVolume, immediate : true});
 		return this._audio.play({url : urlString, channel : audioChannel}).callAfter(afterFunction);
+	},
+	
+	//Sets the speech rate of all the channels in a list of audio channels
+	setSpeechRate: function(speechRate, channelList)
+	{
+		for(var audioChannel in channelList)
+			this._audio.setProperty({name : 'rate', channel : audioChannel, value : speechRate, immediate : true});
 	}
 });
