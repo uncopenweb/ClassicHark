@@ -36,6 +36,10 @@ dojo.declare('harkTheSound', null, {
         var audioDef = uow.getAudio({defaultCaching: true});    //get JSonic
         audioDef.addCallback(dojo.hitch(this, function(audio) { 
             this.audio = audio;
+			
+			dojo.subscribe('/org/hark/prefs/response', this, "_prefsCallBack");
+			dojo.publish('/org/hark/prefs/request');
+			
             //dojo.connect(dijit.byId("optionsButton"), "onClick", optionsFormDlg, "show"); //volume change possible
         }));
         var rewardImageRequest = {
@@ -62,6 +66,20 @@ dojo.declare('harkTheSound', null, {
         }));
     },
     
+	//Called whenever a hark preference (such as volume) changes
+	_prefsCallBack: function(prefs, which)
+	{
+		this._setSpeechRate(prefs.speechRate);
+	},
+	
+	//Sets the speech rate of all audio channels that could possibly be used
+	_setSpeechRate: function(rate)
+	{
+		this._audio.setProperty({name : 'rate', channel : 'default', value : rate, immediate : true});
+		this._audio.setProperty({name : 'rate', channel : 'second', value : rate, immediate : true});
+		this._audio.setProperty({name : 'rate', channel : 'endGame', value : rate, immediate : true});
+	}
+	
     //decides what to do with a hash    
     _handleHash: function(hash) {
         if (this.isValidHash(hash)) {
