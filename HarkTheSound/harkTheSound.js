@@ -78,7 +78,7 @@ dojo.declare('harkTheSound', null, {
 		this._audio.setProperty({name : 'rate', channel : 'default', value : rate, immediate : true});
 		this._audio.setProperty({name : 'rate', channel : 'second', value : rate, immediate : true});
 		this._audio.setProperty({name : 'rate', channel : 'endGame', value : rate, immediate : true});
-	}
+	},
 	
     //decides what to do with a hash    
     _handleHash: function(hash) {
