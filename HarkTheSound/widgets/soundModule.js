@@ -19,7 +19,7 @@ dojo.declare('widgets.soundModule', null,
 	
 	//Speaks an utterance over a certain audio channel
 	speak: function(string, audioChannel, shouldStop, afterFunction)
-	{
+	{console.log("Speaking... String: "+string+", Audio Channel: "+audioChannel+", Master Volume: "+this.masterVolume+", Speech Volume: "+this.speechVolume);
 		if(shouldStop)
 			this._audio.stop({channel : audioChannel});
 		
@@ -29,7 +29,7 @@ dojo.declare('widgets.soundModule', null,
 
 	//Plays a certain sound over a certain audio channel
 	playSound: function(urlString, audioChannel, shouldStop, afterFunction)
-	{
+	{console.log("Playing... Source: "+urlString+", Audio Channel: "+audioChannel+", Master Volume: "+this.masterVolume+", Sound Volume: "+this.soundVolume);
 		if(shouldStop)
 			this._audio.stop({channel : audioChannel});
 			
