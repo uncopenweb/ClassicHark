@@ -40,7 +40,7 @@ dojo.declare('widgets.soundModule', null,
 	//Sets the speech rate of all the channels in a list of audio channels
 	setSpeechRate: function(speechRate, channelList)
 	{
-		for(var audioChannel in channelList)
-			this._audio.setProperty({name : 'rate', channel : audioChannel, value : speechRate, immediate : true});
+		//for(var audioChannel in channelList)
+			//this._audio.setProperty({name : 'rate', channel : audioChannel, value : speechRate, immediate : true});
 	}
 });
