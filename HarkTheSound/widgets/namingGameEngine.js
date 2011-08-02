@@ -35,8 +35,8 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
             this._audio = audio;
 			this.soundModule=new widgets.soundModule(this._audio);
 			
-			dojo.subscribe('/org/hark/prefs/response', this, "_prefsCallBack");
-			dojo.publish('/org/hark/prefs/request');
+			//dojo.subscribe('/org/hark/prefs/response', this, "_prefsCallBack");
+			//dojo.publish('/org/hark/prefs/request');
 			
             /**this.audioSub = dojo.subscribe("audioVolume", dojo.hitch(this, function(newVolume){
                 this._audio.setProperty({name : 'volume', value: newVolume, immediate : true});
