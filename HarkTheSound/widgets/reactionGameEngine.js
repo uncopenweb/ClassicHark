@@ -107,6 +107,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
     // pops up game "instructions". 
     // @todo: should let user know what the good and bad sounds are
     _doInstructions: function() { 
+		this.soundModule.getAudio().setProperty({name : 'volume', value : soundModule.masterVolume*soundModule.speechVolume, immediate : true});
         this.soundModule.getAudio().say({text: this.instructions}).callBefore(dojo.hitch(this, function() {  
             this._loadingDialog._alreadyInitialized=true;    //so that .hide will have effect   
             this._loadingDialog.hide();
@@ -504,6 +505,8 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 		if(conveyPaused)
 		{
 			var pauseMessage = this._oneOf(this.pauseMessages);
+			this.soundModule.getAudio().setProperty({name : 'volume', value : soundModule.masterVolume*soundModule.speechVolume, immediate : true});
+			
 			this.soundModule.getAudio().say({text : pauseMessage}).callBefore(dojo.hitch(this, function() 
 			{
 				this._changeGameImage(this._oneOf(this.pauseImages));
