@@ -41,6 +41,9 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
             this._audio = audio;
 			this.soundModule=new widgets.soundModule(this._audio);
 			
+			dojo.subscribe('/org/hark/prefs/response', this, "_prefsCallBack");
+			dojo.publish('/org/hark/prefs/request');
+			
             var constructorHandle = dojo.subscribe("namingGameEngineStartup", dojo.hitch(this, function(message){
                 if (message == "postCreate_ready" && !this.gameStarted) {
                     dojo.unsubscribe(constructorHandle);
@@ -91,6 +94,16 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 			
 		else
 			this._restartGamePlay("_pauseCallBack");
+	},
+	
+	//Called whenever a preference (such as volume) changes
+	_prefsCallBack: function(prefs, which)
+	{
+		this.soundModule.masterVolume=prefs.volume;
+		this.soundModule.speechVolume=prefs.speechVolume;
+		this.soundModule.soundVolume=prefs.soundVolume;
+		
+		this.soundModule.setSpeechRate(prefs.speechRate, ['default', 'endGame']);
 	},
 
     // pops up game "instructions". 
