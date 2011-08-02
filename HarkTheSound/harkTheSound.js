@@ -37,8 +37,8 @@ dojo.declare('harkTheSound', null, {
         audioDef.addCallback(dojo.hitch(this, function(audio) { 
             this.audio = audio;
 			
-			dojo.subscribe('/org/hark/prefs/response', this, "_prefsCallBack");
-			dojo.publish('/org/hark/prefs/request');
+			//dojo.subscribe('/org/hark/prefs/response', this, "_prefsCallBack");
+			//dojo.publish('/org/hark/prefs/request');
             //dojo.connect(dijit.byId("optionsButton"), "onClick", optionsFormDlg, "show"); //volume change possible
         }));
         var rewardImageRequest = {
