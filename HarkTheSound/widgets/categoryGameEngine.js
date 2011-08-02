@@ -41,9 +41,6 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
             this._audio = audio;
 			this.soundModule=new widgets.soundModule(this._audio);
 			
-			dojo.subscribe('/org/hark/prefs/response', this, "_prefsCallBack");
-			dojo.publish('/org/hark/prefs/request');
-			
             /**this.audioSub = dojo.subscribe("audioVolume", dojo.hitch(this, function(newVolume){
                 this._audio.setProperty({name : 'volume', value: newVolume, immediate : true});
                 this._audio.setProperty({name : 'volume', value: newVolume, channel : 'second', immediate : true});
@@ -93,16 +90,6 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
         }));
         dojo.publish("categoryGameEngineStartup", ["postCreate_ready"]);
     },
-	
-	//Called whenever a preference (such as volume) changes
-	_prefsCallBack: function(prefs, which)
-	{
-		this.soundModule.masterVolume=prefs.volume;
-		this.soundModule.speechVolume=prefs.speechVolume;
-		this.soundModule.soundVolume=prefs.soundVolume;
-		
-		this.soundModule.setSpeechRate(prefs.speechRate, ['default', 'second']);
-	},
     
     //  called when game starts AND user has not yet changed anything in options menu
     //  could just get from HTML, but setup wont even be used on HTS.org
