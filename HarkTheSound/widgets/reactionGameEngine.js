@@ -41,8 +41,8 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
             this._audio = audio;
 			this.soundModule=new widgets.soundModule(this._audio);
 			
-			//dojo.subscribe('/org/hark/prefs/response', this, "_prefsCallBack");
-			//dojo.publish('/org/hark/prefs/request');
+			dojo.subscribe('/org/hark/prefs/response', this, "_prefsCallBack");
+			dojo.publish('/org/hark/prefs/request');
 			
             var constructorHandle = dojo.subscribe("namingGameEngineStartup", dojo.hitch(this, function(message){
                 if (message == "postCreate_ready" && !this.gameStarted) {
