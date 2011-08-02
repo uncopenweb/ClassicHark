@@ -35,10 +35,10 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
             this._audio = audio;
 			this.soundModule=new widgets.soundModule(this._audio);
 			
-            /**this.audioSub = dojo.subscribe("audioVolume", dojo.hitch(this, function(newVolume){
+            this.audioSub = dojo.subscribe("audioVolume", dojo.hitch(this, function(newVolume){
                 this._audio.setProperty({name : 'volume', value: newVolume, immediate : true});
                 this._audio.setProperty({name : 'volume', value: newVolume, channel : 'second', immediate : true});
-            }));*/
+            }));
 			
             var constructorHandle = dojo.subscribe("namingGameEngineStartup", dojo.hitch(this, function(message){
                 if (message == "postCreate_ready" && !this.gameStarted) {
@@ -437,7 +437,7 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
     }, 
     
     uninitialize: function() {
-        //dojo.unsubscribe(this.audioSub);
+        dojo.unsubscribe(this.audioSub);
         var handle = dojo.subscribe("gameExit", dojo.hitch(this, function(){
             dojo.unsubscribe(handle);
         }));
