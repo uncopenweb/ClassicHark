@@ -105,7 +105,10 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 		this.soundModule.soundVolume=prefs.soundVolume;
 		
 		if(this.playingBeginningSpeech)
+		{
 			this.soundModule.getAudio().setProperty({name : 'volume', value : this.soundModule.masterVolume*this.soundModule.speechVolume, immediate : true});
+			console.log("Master volume: "+this.soundModule.masterVolume+", Speech Volume: "+this.soundModule.speechVolume);
+		}
 	},
 
     // pops up game "instructions". 
