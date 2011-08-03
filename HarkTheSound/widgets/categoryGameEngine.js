@@ -113,10 +113,7 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
 			this.soundModule.getAudio().setProperty({name : 'volume', value : this.soundModule.masterVolume*this.soundModule.speechVolume, immediate : true});
 			
 		else if(this.playingVictorySound)
-		{
 			this.soundModule.getAudio().setProperty({name : 'volume', value : this.soundModule.masterVolume*this.soundModule.soundVolume, immediate : true});
-			console.log(this.soundModule.soundVolume);
-		}
 	},
     
     //  called when game starts AND user has not yet changed anything in options menu
