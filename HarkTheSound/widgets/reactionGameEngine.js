@@ -171,6 +171,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
         dojo.connect(dojo.global, 'onkeydown', this, '_analyzeKey');
         dojo.connect(dojo.global, 'onkeyup', this, '_removeKeyDownFlag');
         this._keyHasGoneUp = true;
+		this.playingBeginningSpeech=false;console.log("Playing Beginning Speech: "+this.playingBeginningSpeech);
        // dojo.connect(dijit.byId("creditsButton"), "onClick", this, "_showCredits");
         //this._creditsDialog = dijit.byId("creditsDialog");
         //dojo.connect(this._creditsDialog, 'hide', this, '_restartGamePlay'); 	
@@ -204,7 +205,6 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
         //caller	
         //var myCaller = caller;
         //console.log("this._run() called by: " + myCaller);
-		this.playingBeginningSpeech=false;console.log("Playing Beginning Speech: "+this.playingBeginningSpeech);
 		
         dojo.query("#creditsDialog").removeClass("hidden");
         var now = new Date();
