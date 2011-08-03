@@ -91,10 +91,10 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 	//Called when the game is paused without the 'p' button
 	_pauseCallBack: function(paused)
 	{
-		if(paused && !this.playingBeginningSpeech)
+		if(paused && !this.playingBeginningSpeech && !this.playingEndingSounds)
 			this._pause(false);
 			
-		else if(!paused && !this.playingBeginningSpeech)
+		else if(!paused && !this.playingBeginningSpeech && !this.playingEndingSounds)
 			this._restartGamePlay("_pauseCallBack");
 	},
 	
@@ -105,8 +105,16 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 		this.soundModule.speechVolume=prefs.speechVolume;
 		this.soundModule.soundVolume=prefs.soundVolume;
 		
+		//Allow volume adjustment in middle of "beginning speech"
 		if(this.playingBeginningSpeech)
 			this.soundModule.getAudio().setProperty({name : 'volume', value : this.soundModule.masterVolume*this.soundModule.speechVolume, immediate : true});
+		
+		//Allow volume adjustment during congratulating at end
+		if(this.playingEndingSounds)
+		{
+			this.soundModule.getAudio().setProperty({name : 'volume', value : this.soundModule.masterVolume*this.soundModule.speechVolume, immediate : true});
+			this.soundModule.getAudio().setProperty({name : 'volume', channel : 'endgame', value : this.soundModule.masterVolume*this.soundModule.soundVolume, immediate : true});
+		}
 	},
 
     // pops up game "instructions". 
@@ -664,8 +672,8 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
         this._changeGameImage(this._oneOf(this.endImages));
         this.ScoreString.innerHTML = "Your final score is: "; //change wording to final score
 		
-		this.playingEndingSounds=true;console.log("Playing Ending Sounds: "+this.playingEndingSounds);
-		this.soundModule.playSound(this._oneOf(this.endSounds), 'endGame', false, function(){playingEndingSounds=false;console.log("Playing Ending Sounds: "+this.playingEndingSounds);});
+		this.playingEndingSounds=true;
+		this.soundModule.playSound(this._oneOf(this.endSounds), 'endGame', false, function(){playingEndingSounds=false;});
 		
         //Say final score
 		this.soundModule.speak("Congratulations! Your final score is" + String(this.score), 'default', false, function(){});
