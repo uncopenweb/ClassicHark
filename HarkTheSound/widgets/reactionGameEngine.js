@@ -93,7 +93,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 		if(paused && !this.playingBeginningSpeech)
 			this._pause(false);
 			
-		else
+		else if(!paused)
 			this._restartGamePlay("_pauseCallBack");
 	},
 	
