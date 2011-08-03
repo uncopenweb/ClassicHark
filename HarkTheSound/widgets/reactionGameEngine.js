@@ -160,7 +160,9 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
                         var sound = badSoundsCopy.pop();
 						
 						this.soundModule.speak("Here's the next bad sound.", 'default', false, function(){});
-						this.soundModule.playSound(sound, 'default', false, function(){});						
+						
+						this.soundModule.getAudio().setProperty({name : 'volume', value : this.soundModule.masterVolume*this.soundModule*speechVolume, immediate : true});
+						this.soundModule.getAudio().play({url : sound});						
                     }
                 }
             }
