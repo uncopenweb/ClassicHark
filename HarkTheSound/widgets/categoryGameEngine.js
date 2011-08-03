@@ -16,6 +16,11 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
 
     hark: {}, 
     soundModule: null,
+	playingIntroduction: false, //Variables set while certain (potentially) long sounds are playing, in order to allow volume adjustment during them
+	playingQuestion: false,
+	sayingAnswerIsWrong: false,
+	playingVictorySound: false,
+	playingHint: false,
     gameData: {},
     
     constructor: function() {    //load screen
@@ -160,7 +165,11 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
         this.connect(dojo.global, 'onkeydown', '_analyzeKey');
         this.connect(dojo.global, 'onkeyup', '_removeKeyDownFlag');
 		
+		this.playingIntroduction=true;console.log("Playing Introduction: "+this.playingIntroduction);
+		
 		this.soundModule.speak("welcome to " + this.gameData.Name, 'default', false, dojo.hitch(this, function() {
+			this.playingIntroduction=false;console.log("Playing Introduction: "+this.playingIntroduction);
+			
 			if(this) {
 				this.findVisibleImageArea();
 				this._runNextQuestion();
@@ -197,7 +206,7 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
     
     //  builds the answer choice array based on the question type
     _setAnswerChoices: function() {
-        if (this._questionType == null) {console.log("Question Type was never set.")}
+        if (this._questionType == null) {console.log("Question Type was never set.");}
         else if (this._questionType == "exclusive") { 
             this._answerChoices = this._buildExclusiveChoices();
         }
@@ -302,7 +311,7 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
     //  Asks the question
     _askQuestion: function() {
         //note that Exclusion_Question & Inclusion_Question are arrays
-        if (this._questionType == null) {console.log("Question Type was never set.")}
+        if (this._questionType == null) {console.log("Question Type was never set.");}
         else if (this._questionType == "exclusive") {
             var shallowCopy = dojo.map(this._categories[this._categoriesIndex].Exclusion_Question, function(item) {return item;});
             this._randomize(shallowCopy);
@@ -317,7 +326,11 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
         }
         else { console.log("New Question type added that hasn't been accounted for!!!");}
 		
+		this.playingQuestion=true;console.log("Playing Question: "+this.playingQuestion);
+		
 		this.soundModule.speak(this._currentQuestion, 'default', true, dojo.hitch(this, function() {
+			this.playingQuestion=false;console.log("Playing Question: "+this.playingQuestion);
+		
 			//wait for timeout to accept response
 			setTimeout(dojo.hitch(this, function(){this._waitingForResponse = true;}), this.promptTime*1000);    
 		}));
@@ -367,8 +380,9 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
     
     _chooseSequence: function(evt) {
         evt.preventDefault();
-        if(!this._hasMoved) { //has not yet moved to select                        
-			this.soundModule.speak("You must move through the choices before you can select an answer.", 'default', true, function(){});
+        if(!this._hasMoved) { //has not yet moved to select  
+			this.sayingAnswerIsWrong=true;console.log("Saying Answer Is Wrong: "+this.sayingAnswerIsWrong); //Failing to select an answer is also a "wrong answer'		
+			this.soundModule.speak("You must move through the choices before you can select an answer.", 'default', true, function(){this.sayingAnswerIsWrong=false;console.log("Saying Answer Is Wrong: "+this.sayingAnswerIsWrong);});
         }
         else { //check if correct
             this._questionAttempts++;
@@ -516,9 +530,11 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
         var soundData = dojo.clone(this.hark.rewardSounds);
         this._randomize(soundData);
         var sound = soundData.pop();
-        
+        this.playingVictorySound=true;console.log("Playing Victory Sound: "+this.playingVictorySound);
+		
 		this.soundModule.playSound(sound.url, 'default', true, dojo.hitch(this, function() 
 		{
+			this.playingVictorySound=false;console.log("Playing Victory Sound: "+this.playingVictorySound);
 			dojo.addClass("gameImage", "hidden");
 			this.gameImage.src = "images/white.jpg"; //because of chrome's display issues
 			this._incrementCategoriesIndex();
@@ -538,7 +554,11 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
         var responses = ["Try Again", "Oops, try again", "You can do it, try again"];
         var randomResponse = responses[Math.floor(Math.random()*responses.length)];
 		
+		this.sayingAnswerIsWrong=true;console.log("Saying Answer Is Wrong: "+this.sayingAnswerIsWrong);
+		
 		this.soundModule.speak(randomResponse, 'default', true, dojo.hitch(this, function() {
+			this.sayingAnswerIsWrong=false;console.log("Saying Answer Is Wrong: "+this.sayingAnswerIsWrong);
+			
 			if (doHint) {
 				var hints = dojo.map(this.correctThing.Hint, function(item){return item;});
 				this._randomize(hints);
@@ -555,12 +575,14 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
     //  @return the deferred 
     sayOrPlay: function(string) {
         var splitArray = string.split("/");
+		this.playingHint=true;console.log("Playing Hint: "+this.playingHint);
+		
         if ((splitArray[0] == "Sounds") && (splitArray.length > 1)) { //then play it
-			var def=this.soundModule.playSound(string, 'default', true, function(){});
+			var def=this.soundModule.playSound(string, 'default', true, function(){this.playingHint=false;console.log("Playing Hint: "+this.playingHint);});
             this.currentPrompt = "";
         }
         else {  //say it
-			var def=this.soundModule.speak(string, 'default', true, function(){});
+			var def=this.soundModule.speak(string, 'default', true, function(){this.playingHint=false;console.log("Playing Hint: "+this.playingHint);});
             this.currentPrompt = string;
         }
         return def;
