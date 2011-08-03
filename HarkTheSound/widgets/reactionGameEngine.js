@@ -156,7 +156,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
                     else{
                         var sound = badSoundsCopy.pop();
 						
-						this.soundModule.speak("Here's the next bad sound.", 'default', false, function()
+						this.soundModule.speak("Here's the next bad sound.", 'default', false, dojo.hitch(this, function()
 						{
 							this.soundModule.playSound(sound, 'default', false, function()
 							{
@@ -165,7 +165,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 									this.playingBeginningSpeech=false;console.log("Playing Beginning Speech: "+this.playingBeginningSpeech);
 								}
 							});
-						});						
+						}));						
                     }
                 }
             }
