@@ -105,10 +105,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 		this.soundModule.soundVolume=prefs.soundVolume;
 		
 		if(this.playingBeginningSpeech)
-		{
 			this.soundModule.getAudio().setProperty({name : 'volume', value : this.soundModule.masterVolume*this.soundModule.speechVolume, immediate : true});
-			console.log("Master volume: "+this.soundModule.masterVolume+", Speech Volume: "+this.soundModule.speechVolume);
-		}
 	},
 
     // pops up game "instructions". 
@@ -161,6 +158,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 						
 						this.soundModule.speak("Here's the next bad sound.", 'default', false, function(){});
 						
+						//Set properties of audio object directly in advance of playing bad sounds so that the initial speech volume will be configured to soundModule.speechVolume
 						this.soundModule.getAudio().setProperty({name : 'volume', value : this.soundModule.masterVolume*this.soundModule.speechVolume, immediate : true});
 						this.soundModule.getAudio().play({url : sound});						
                     }
