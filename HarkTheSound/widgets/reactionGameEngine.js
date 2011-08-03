@@ -17,7 +17,6 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 
     hark: {}, 
     soundModule: null,
-	playingRewardSound: false,
     gameData: {}, 
 
     constructor: function() {
@@ -103,10 +102,6 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 		this.soundModule.masterVolume=prefs.volume;
 		this.soundModule.speechVolume=prefs.speechVolume;
 		this.soundModule.soundVolume=prefs.soundVolume;
-		
-		//If in middle of playing reward sound, adjust its volume
-		if(this.playingRewardSound)
-			this.soundModule.getAudio().setProperty({name : 'volume', value : soundModule.masterVolume*soundModule.soundVolume, immediate : true});
 	},
 
     // pops up game "instructions". 
@@ -344,19 +339,15 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
         var currentTimeForScore = dayForScore.getTime();
         var sound = this._oneOf(this.rewardSounds);
 		
-		this.playingRewardSound=true;
-		
 		this.soundModule.playSound(sound, 'default', false, dojo.hitch(this, function() 
         {
-			this.playingRewardSound=false;
-			
             if (this._gameHasEnded()) {    //if time has passed call for end
                 this._endGame();
             }
             else if(this._hitAScoreMilestone()) {
                 this._readScore();                
             }
-            else {
+            else {	
                 if (this._gameIsPaused){    //then paused after goodMove began so do nothing
                 }
                 else {    //continue running 
