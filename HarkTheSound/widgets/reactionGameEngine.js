@@ -17,6 +17,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 
     hark: {}, 
     soundModule: null,
+	playingBeginningSpeech: false,
     gameData: {}, 
 
     constructor: function() {
@@ -102,6 +103,9 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 		this.soundModule.masterVolume=prefs.volume;
 		this.soundModule.speechVolume=prefs.speechVolume;
 		this.soundModule.soundVolume=prefs.soundVolume;
+		
+		if(this.playingBeginningSpeech)
+			this.soundModule.getAudio().setProperty({name : 'volume', value : this.soundModule.masterVolume*this.soundModule.speechVolume, immediate : true});
 	},
 
     // pops up game "instructions". 
@@ -109,7 +113,9 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
     _doInstructions: function() { 
         this.soundModule.getAudio().say({text: this.instructions}).callBefore(dojo.hitch(this, function() {  
 			this.soundModule.getAudio().setProperty({name : 'volume', value : this.soundModule.masterVolume*this.soundModule.speechVolume, immediate : true}); //Make sure volume of audio channel is set before sound begins playing
-            this._loadingDialog._alreadyInitialized=true;    //so that .hide will have effect   
+            this.playingBeginningSpeech=true;
+			
+			this._loadingDialog._alreadyInitialized=true;    //so that .hide will have effect   
             this._loadingDialog.hide();
             var instructionsDialog = this._showDialog("Instructions", this.instructions);      
             dojo.connect(instructionsDialog, 'hide', dojo.hitch(this, function() {
@@ -151,10 +157,14 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
                         var sound = badSoundsCopy.pop();
 						
 						this.soundModule.speak("Here's the next bad sound.", 'default', false, function(){});
-						this.soundModule.playSound(sound, 'default', false, function(){});						
-                    } 
+						this.soundModule.playSound(sound, 'default', false, function()
+						{
+							if(badSoundsCopy.length<1)
+								this.playingBeginningSpeech=false;
+						});						
+                    }
                 }
-            }          
+            }
         }
     },
 
