@@ -114,7 +114,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
         this.soundModule.getAudio().say({text: this.instructions}).callBefore(dojo.hitch(this, function() {  
 			this.soundModule.getAudio().setProperty({name : 'volume', value : this.soundModule.masterVolume*this.soundModule.speechVolume, immediate : true}); //Make sure volume of audio channel is set before sound begins playing
             this.playingBeginningSpeech=true;
-			console.log("Playing Beginning Speech: "+playingBeginningSpeech);
+			console.log("Playing Beginning Speech: "+this.playingBeginningSpeech);
 			this._loadingDialog._alreadyInitialized=true;    //so that .hide will have effect   
             this._loadingDialog.hide();
             var instructionsDialog = this._showDialog("Instructions", this.instructions);      
@@ -161,7 +161,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 						{
 							if(badSoundsCopy.length<1)
 							{
-								this.playingBeginningSpeech=false;console.log("Playing Beginning Speech: "+playingBeginningSpeech);
+								this.playingBeginningSpeech=false;console.log("Playing Beginning Speech: "+this.playingBeginningSpeech);
 							}
 						});						
                     }
