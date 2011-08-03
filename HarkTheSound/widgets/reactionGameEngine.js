@@ -207,7 +207,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
         //caller	
         //var myCaller = caller;
         //console.log("this._run() called by: " + myCaller);
-		
+		console.log("Run!");
         dojo.query("#creditsDialog").removeClass("hidden");
         var now = new Date();
         this._roundStartTime = now.getTime();    //round timer -- used for scoring
