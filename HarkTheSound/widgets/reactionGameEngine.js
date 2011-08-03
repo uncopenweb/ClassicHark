@@ -18,6 +18,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
     hark: {}, 
     soundModule: null,
 	playingBeginningSpeech: false,
+	playingEndingSounds: false,
     gameData: {}, 
 
     constructor: function() {
@@ -662,7 +663,9 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
         this.waitingForResponse = false;    //ignore all keys for purpose of game
         this._changeGameImage(this._oneOf(this.endImages));
         this.ScoreString.innerHTML = "Your final score is: "; //change wording to final score
-		this.soundModule.playSound(this._oneOf(this.endSounds), 'endGame', false, function(){});
+		
+		this.playingEndingSounds=true;console.log("Playing Ending Sounds: "+this.playingEndingSounds);
+		this.soundModule.playSound(this._oneOf(this.endSounds), 'endGame', false, function(){playingEndingSounds=false;console.log("Playing Ending Sounds: "+this.playingEndingSounds);});
 		
         //Say final score
 		this.soundModule.speak("Congratulations! Your final score is" + String(this.score), 'default', false, function(){});
