@@ -39,7 +39,7 @@
         "Sounds/coinsAndBarrelsSounds/applause",
     ], 
 
-    "Game_Time_Length": 180000,    
+    "Game_Time_Length": 18000,    
     
     "Pause_Screen_Images": [
         { 
