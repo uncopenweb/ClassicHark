@@ -16,11 +16,13 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
 
     hark: {}, 
     soundModule: null,
+	
 	playingIntroduction: false, //Variables set while certain (potentially) long sounds are playing, in order to allow volume adjustment during them
 	playingQuestion: false,
 	sayingAnswerIsWrong: false,
 	playingVictorySound: false,
 	playingHint: false,
+	
     gameData: {},
     
     constructor: function() {    //load screen
@@ -105,6 +107,13 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
 		this.soundModule.masterVolume=prefs.volume;
 		this.soundModule.speechVolume=prefs.speechVolume;
 		this.soundModule.soundVolume=prefs.soundVolume;
+		
+		//Adjust sound volume in middle of long sounds
+		if(this.playingIntroduction || this.playingQuestion || this.sayingAnswerIsWrong || this.playingHint)
+			this.soundModule.getAudio().setProperty({name : 'volume', value : this.soundModule.masterVolume*this.soundModule.speechVolume, immediate : true});
+			
+		else if(this.playingVictorySound)
+			this.soundModule.getAudio().setProperty({name : 'volume', value : this.soundModule.masterVolume*this.soundModule.soundVolume, immediate : true});
 	},
     
     //  called when game starts AND user has not yet changed anything in options menu
@@ -165,10 +174,10 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
         this.connect(dojo.global, 'onkeydown', '_analyzeKey');
         this.connect(dojo.global, 'onkeyup', '_removeKeyDownFlag');
 		
-		this.playingIntroduction=true;console.log("Playing Introduction: "+this.playingIntroduction);
+		this.playingIntroduction=true;
 		
 		this.soundModule.speak("welcome to " + this.gameData.Name, 'default', false, dojo.hitch(this, function() {
-			this.playingIntroduction=false;console.log("Playing Introduction: "+this.playingIntroduction);
+			this.playingIntroduction=false;
 			
 			if(this) {
 				this.findVisibleImageArea();
@@ -326,10 +335,10 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
         }
         else { console.log("New Question type added that hasn't been accounted for!!!");}
 		
-		this.playingQuestion=true;console.log("Playing Question: "+this.playingQuestion);
+		this.playingQuestion=true;
 		
 		this.soundModule.speak(this._currentQuestion, 'default', true, dojo.hitch(this, function() {
-			this.playingQuestion=false;console.log("Playing Question: "+this.playingQuestion);
+			this.playingQuestion=false;
 		
 			//wait for timeout to accept response
 			setTimeout(dojo.hitch(this, function(){this._waitingForResponse = true;}), this.promptTime*1000);    
@@ -381,8 +390,8 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
     _chooseSequence: function(evt) {
         evt.preventDefault();
         if(!this._hasMoved) { //has not yet moved to select  
-			this.sayingAnswerIsWrong=true;console.log("Saying Answer Is Wrong: "+this.sayingAnswerIsWrong); //Failing to select an answer is also a "wrong answer'		
-			this.soundModule.speak("You must move through the choices before you can select an answer.", 'default', true, function(){this.sayingAnswerIsWrong=false;console.log("Saying Answer Is Wrong: "+this.sayingAnswerIsWrong);});
+			this.sayingAnswerIsWrong=true; //Failing to select an answer is also a "wrong answer'		
+			this.soundModule.speak("You must move through the choices before you can select an answer.", 'default', true, function(){this.sayingAnswerIsWrong=false;});
         }
         else { //check if correct
             this._questionAttempts++;
@@ -530,11 +539,11 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
         var soundData = dojo.clone(this.hark.rewardSounds);
         this._randomize(soundData);
         var sound = soundData.pop();
-        this.playingVictorySound=true;console.log("Playing Victory Sound: "+this.playingVictorySound);
+        this.playingVictorySound=true;
 		
 		this.soundModule.playSound(sound.url, 'default', true, dojo.hitch(this, function() 
 		{
-			this.playingVictorySound=false;console.log("Playing Victory Sound: "+this.playingVictorySound);
+			this.playingVictorySound=false;
 			dojo.addClass("gameImage", "hidden");
 			this.gameImage.src = "images/white.jpg"; //because of chrome's display issues
 			this._incrementCategoriesIndex();
@@ -554,10 +563,10 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
         var responses = ["Try Again", "Oops, try again", "You can do it, try again"];
         var randomResponse = responses[Math.floor(Math.random()*responses.length)];
 		
-		this.sayingAnswerIsWrong=true;console.log("Saying Answer Is Wrong: "+this.sayingAnswerIsWrong);
+		this.sayingAnswerIsWrong=true;
 		
 		this.soundModule.speak(randomResponse, 'default', true, dojo.hitch(this, function() {
-			this.sayingAnswerIsWrong=false;console.log("Saying Answer Is Wrong: "+this.sayingAnswerIsWrong);
+			this.sayingAnswerIsWrong=false;
 			
 			if (doHint) {
 				var hints = dojo.map(this.correctThing.Hint, function(item){return item;});
@@ -575,14 +584,14 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
     //  @return the deferred 
     sayOrPlay: function(string) {
         var splitArray = string.split("/");
-		this.playingHint=true;console.log("Playing Hint: "+this.playingHint);
+		this.playingHint=true;
 		
         if ((splitArray[0] == "Sounds") && (splitArray.length > 1)) { //then play it
-			var def=this.soundModule.playSound(string, 'default', true, function(){this.playingHint=false;console.log("Playing Hint: "+this.playingHint);});
+			var def=this.soundModule.playSound(string, 'default', true, function(){this.playingHint=false;});
             this.currentPrompt = "";
         }
         else {  //say it
-			var def=this.soundModule.speak(string, 'default', true, function(){this.playingHint=false;console.log("Playing Hint: "+this.playingHint);});
+			var def=this.soundModule.speak(string, 'default', true, function(){this.playingHint=false;});
             this.currentPrompt = string;
         }
         return def;
