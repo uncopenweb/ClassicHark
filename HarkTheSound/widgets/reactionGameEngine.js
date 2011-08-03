@@ -156,16 +156,8 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
                     else{
                         var sound = badSoundsCopy.pop();
 						
-						this.soundModule.speak("Here's the next bad sound.", 'default', false, dojo.hitch(this, function()
-						{
-							this.soundModule.playSound(sound, 'default', false, function()
-							{
-								if(badSoundsCopy.length<1)
-								{
-									this.playingBeginningSpeech=false;console.log("Playing Beginning Speech: "+this.playingBeginningSpeech);
-								}
-							});
-						}));						
+						this.soundModule.speak("Here's the next bad sound.", 'default', false, function(){});
+						this.soundModule.playSound(sound, 'default', false, function(){});						
                     }
                 }
             }
@@ -212,6 +204,8 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
         //caller	
         //var myCaller = caller;
         //console.log("this._run() called by: " + myCaller);
+		this.playingBeginningSpeech=false;console.log("Playing Beginning Speech: "+this.playingBeginningSpeech);
+		
         dojo.query("#creditsDialog").removeClass("hidden");
         var now = new Date();
         this._roundStartTime = now.getTime();    //round timer -- used for scoring
