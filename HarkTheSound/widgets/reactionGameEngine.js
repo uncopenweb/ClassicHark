@@ -171,14 +171,13 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
         dojo.connect(dojo.global, 'onkeydown', this, '_analyzeKey');
         dojo.connect(dojo.global, 'onkeyup', this, '_removeKeyDownFlag');
         this._keyHasGoneUp = true;
-		this.playingBeginningSpeech=false;console.log("Playing Beginning Speech: "+this.playingBeginningSpeech);
+		this.playingBeginningSpeech=false;
        // dojo.connect(dijit.byId("creditsButton"), "onClick", this, "_showCredits");
         //this._creditsDialog = dijit.byId("creditsDialog");
         //dojo.connect(this._creditsDialog, 'hide', this, '_restartGamePlay'); 	
         var d = new Date();
         this._startTime = d.getTime();
         this._run();
-        
     },
    
     // from first brower version of coins and barrels.
