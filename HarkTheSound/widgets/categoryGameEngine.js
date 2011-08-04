@@ -391,7 +391,7 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
         evt.preventDefault();
         if(!this._hasMoved) { //has not yet moved to select  
 			this.sayingAnswerIsWrong=true;console.log(this.sayingAnswerIsWrong); //Failing to select an answer is also a "wrong answer"
-			this.soundModule.speak("You must move through the choices before you can select an answer.", 'default', true, function(){this.sayingAnswerIsWrong=false;console.log(this.sayingAnswerIsWrong);});
+			this.soundModule.speak("You must move through the choices before you can select an answer.", 'default', true, dojo.hitch(this, function(){this.sayingAnswerIsWrong=false;console.log(this.sayingAnswerIsWrong);}));
         }
         else { //check if correct
             this._questionAttempts++;
