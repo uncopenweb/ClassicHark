@@ -18,6 +18,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
     hark: {}, 
     soundModule: null,
 	playingBeginningSpeech: false,
+	playingEndingSounds: false,
     gameData: {}, 
 
     constructor: function() {
@@ -90,10 +91,10 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 	//Called when the game is paused without the 'p' button
 	_pauseCallBack: function(paused)
 	{
-		if(paused && !this.playingBeginningSpeech && !this._gameIsOver)
+		if(paused && !this.playingBeginningSpeech && !this.playingEndingSounds)
 			this._pause(false);
 			
-		else if(!paused && !this.playingBeginningSpeech && !this._gameIsOver)
+		else if(!paused && !this.playingBeginningSpeech && !this.playingEndingSounds)
 			this._restartGamePlay("_pauseCallBack");
 	},
 	
@@ -109,12 +110,10 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 			this.soundModule.getAudio().setProperty({name : 'volume', value : this.soundModule.masterVolume*this.soundModule.speechVolume, immediate : true});
 		
 		//Allow volume adjustment during congratulating at end
-		if(this._gameIsOver)
+		if(this.playingEndingSounds)
 		{
-			console.log(this.soundModule.getAudio().getProperty({name : 'volume', channel : 'endgame'}));
-			this.soundModule.getAudio().setProperty({name : 'volume', value : prefs.volume*prefs.speechVolume, immediate : true});
-			this.soundModule.getAudio().setProperty({name : 'volume', channel : 'endgame', value : prefs.volume*prefs.soundVolume, immediate : true});
-			console.log(this.soundModule.getAudio().getProperty({name : 'volume', channel : 'endgame'}));
+			this.soundModule.getAudio().setProperty({name : 'volume', value : this.soundModule.masterVolume*this.soundModule.speechVolume, immediate : true});
+			this.soundModule.getAudio().setProperty({name : 'volume', channel : 'endgame', value : this.soundModule.masterVolume*this.soundModule.soundVolume, immediate : true});
 		}
 	},
 
@@ -446,7 +445,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
                 }
                 else {} //ignore the input
             }
-            else if ((evt.keyCode == 80) && !(this._gameIsOver)) {	//p button
+            else if ((evt.keyCode == 80) && !(this._gameIsOver || this.playingEndingSounds)) {	//p button
                 evt.preventDefault();
                 if (this._currentlyReadingScore) {
                     this._dontFinishRead = true; 
@@ -668,12 +667,16 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 	
     //  current just stops the functionality of the game
     _endGame: function() {
-        this._gameIsOver = true;    //disables pause
         this.waitingForResponse = false;    //ignore all keys for purpose of game
         this._changeGameImage(this._oneOf(this.endImages));
         this.ScoreString.innerHTML = "Your final score is: "; //change wording to final score
 		
-		this.soundModule.playSound(this._oneOf(this.endSounds), 'endGame', false, function(){});
+		this.playingEndingSounds=true;
+		this.soundModule.playSound(this._oneOf(this.endSounds), 'endGame', false, function()
+		{
+			this._gameIsOver = true;//disables pause
+			this.playingEndingSounds=false;
+		});
 		
         //Say final score
 		this.soundModule.speak("Congratulations! Your final score is" + String(this.score), 'default', false, function(){});
