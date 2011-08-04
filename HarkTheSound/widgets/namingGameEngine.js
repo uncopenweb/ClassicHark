@@ -15,6 +15,13 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
 
     hark: {}, 
     soundModule: null,
+	
+	playingIntroduction: false, //Variables set while certain (potentially) long sounds are playing, in order to allow volume adjustment during them
+	playingQuestion: false,
+	sayingAnswerIsWrong: false,
+	playingVictorySound: false,
+	playingHint: false,
+	
     gameData: {}, 
 
     constructor: function() {
@@ -101,6 +108,13 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
 		this.soundModule.masterVolume=prefs.volume;
 		this.soundModule.speechVolume=prefs.speechVolume;
 		this.soundModule.soundVolume=prefs.soundVolume;
+		
+		//Adjust sound volume in middle of long sounds
+		if(this.playingIntroduction || this.playingQuestion || this.sayingAnswerIsWrong || this.playingHint)
+			this.soundModule.getAudio().setProperty({name : 'volume', value : this.soundModule.masterVolume*this.soundModule.speechVolume, immediate : true});
+			
+		else if(this.playingVictorySound)
+			this.soundModule.getAudio().setProperty({name : 'volume', value : this.soundModule.masterVolume*this.soundModule.soundVolume, immediate : true});
 	},
 
     //  called when game starts AND user has not yet changed anything in options menu
@@ -159,7 +173,10 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
         this.connect(dojo.global, 'onkeydown', '_analyzeKey');
         this.connect(dojo.global, 'onresize', 'resizeGameImage');
 		
+		this.playingIntroduction=true;
+		
 		this.soundModule.speak("welcome to " + this.gameData.Name, 'default', false, dojo.hitch(this, function() {
+			this.playingIntroduction=false;
             this._runNextQuestion();
         }));
     },
@@ -182,8 +199,11 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
         var shallowCopy = dojo.map(this._possibleQuestions, function(item) {return item;}); 
         this._randomize(shallowCopy);
         var toAsk = shallowCopy.pop();
+		this.playingQuestion=true;
+		
         var def = this.sayOrPlay(toAsk);
         def.callAfter( dojo.hitch(this, function() {
+			this.playingQuestion=false;
             this.playThingPrompt();
         }));
     },
@@ -208,6 +228,11 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
         var splitArray = string.split("/");
         if ((splitArray[0] == "Sounds") && (splitArray.length > 1)) { //then play it
 			var def=this.soundModule.playSound(string, 'default', true, function(){});
+			
+			//If playing question that sounds like speech, set its volume in relation to speech volume, not sound volume
+			if(this.playingQuestion)
+				this.soundModule.getAudio().setProperty({name : 'volume', value : this.soundModule.masterVolume*this.soundModule.speechVolume, immediate : true});
+				
             this.currentPrompt = "";
         }
         else {  //say it
@@ -336,10 +361,11 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
         var soundData = dojo.clone(this.hark.rewardSounds);
         this._randomize(soundData);
         var sound = soundData.pop();
-        this.soundModule.getAudio().stop();
-        
+        this.playingVictorySound=true;
+		
 		this.soundModule.playSound(sound.url, 'default', true, dojo.hitch(this, function() {
-            dojo.addClass("gameImage", "hidden");
+            this.playingVictorySound=false;
+			dojo.addClass("gameImage", "hidden");
             this.gameImage.src = "images/white.jpg"; //because of chrome's display issues
             if (this._choicesRemaining.length == 0) { //then moving on
                 this._incrementThingIndex();
@@ -360,18 +386,24 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
         this.soundModule.getAudio().stop();
         var responses = ["Try Again", "Oops, try again", "You can do it, try again"];
         var randomResponse = responses[Math.floor(Math.random()*responses.length)];
+		this.sayingAnswerIsWrong=true;
+		
         var def = this.sayOrPlay(randomResponse);
         def.callAfter(dojo.hitch(this, function() {
+			this.sayingAnswerIsWrong=false;
+			
             if (doHint) {
-                    var hints = dojo.map(this._currentChoices[this._correctChoiceIndex].Hint, function(item) {return item;});
-                    this._randomize(hints);
-                    var hint = hints.pop();
-                    var def = this.sayOrPlay("Hint: " + hint);
-                    def.callAfter(dojo.hitch(this, function() {
-                        this._waitingForResponse = true;
-                    }));
-                }
-
+                var hints = dojo.map(this._currentChoices[this._correctChoiceIndex].Hint, function(item) {return item;});
+                this._randomize(hints);
+                var hint = hints.pop();
+				this.playingHint=true;
+				
+                var def = this.sayOrPlay("Hint: " + hint);
+                def.callAfter(dojo.hitch(this, function() {
+					this.playingHint=false;
+					this._waitingForResponse = true;
+                }));
+            }
         }));
     },
     
@@ -482,7 +514,8 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
     _chooseSequence: function(evt) {
         evt.preventDefault();
         if(!this._hasMoved) { //has not yet moved to select
-			this.soundModule.speak("You must move through the choices before you can select an answer.", 'default', true, function(){});
+			this.sayingAnswerIsWrong=true; //Failing to select an answer is also a "wrong answer"
+			this.soundModule.speak("You must move through the choices before you can select an answer.", 'default', true, function(){this.sayingAnswerIsWrong=false;});
         }
         else { //check if correct
             this._questionAttempts++;

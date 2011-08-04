@@ -390,7 +390,7 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
     _chooseSequence: function(evt) {
         evt.preventDefault();
         if(!this._hasMoved) { //has not yet moved to select  
-			this.sayingAnswerIsWrong=true; //Failing to select an answer is also a "wrong answer'		
+			this.sayingAnswerIsWrong=true; //Failing to select an answer is also a "wrong answer"
 			this.soundModule.speak("You must move through the choices before you can select an answer.", 'default', true, function(){this.sayingAnswerIsWrong=false;});
         }
         else { //check if correct
