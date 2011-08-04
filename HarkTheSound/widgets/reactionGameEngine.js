@@ -18,7 +18,6 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
     hark: {}, 
     soundModule: null,
 	playingBeginningSpeech: false,
-	playingEndingSounds: false,
     gameData: {}, 
 
     constructor: function() {
@@ -91,11 +90,10 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 	//Called when the game is paused without the 'p' button
 	_pauseCallBack: function(paused)
 	{
-		console.log('Paused!');
-		if(paused && !this.playingBeginningSpeech && !this.playingEndingSounds)
+		if(paused && !this.playingBeginningSpeech && !this._gameIsOver)
 			this._pause(false);
 			
-		else if(!paused && !this.playingBeginningSpeech && !this.playingEndingSounds)
+		else if(!paused && !this.playingBeginningSpeech && !this._gameIsOver)
 			this._restartGamePlay("_pauseCallBack");
 	},
 	
@@ -111,9 +109,9 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 			this.soundModule.getAudio().setProperty({name : 'volume', value : this.soundModule.masterVolume*this.soundModule.speechVolume, immediate : true});
 		
 		//Allow volume adjustment during congratulating at end
-		if(this.playingEndingSounds)
+		if(this._gameIsOver)
 		{
-			this.soundModule.getAudio().setProperty({name : 'volume', value : this.soundModule.masterVolume*this.soundModule.speechVolume, immediate : true});
+			//this.soundModule.getAudio().setProperty({name : 'volume', value : this.soundModule.masterVolume*this.soundModule.speechVolume, immediate : true});
 			this.soundModule.getAudio().setProperty({name : 'volume', channel : 'endgame', value : this.soundModule.masterVolume*this.soundModule.soundVolume, immediate : true});
 			console.log("Master Volume: "+this.soundModule.masterVolume+", Speech Volume: "+this.soundModule.speechVolume+", Sound Volume: "+this.soundModule.soundVolume);
 		}
@@ -674,8 +672,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
         this._changeGameImage(this._oneOf(this.endImages));
         this.ScoreString.innerHTML = "Your final score is: "; //change wording to final score
 		
-		this.playingEndingSounds=true;console.log(this.playingEndingSounds);
-		this.soundModule.playSound(this._oneOf(this.endSounds), 'endGame', false, function(){this.playingEndingSounds=false;console.log(this.playingEndingSounds);});
+		this.soundModule.playSound(this._oneOf(this.endSounds), 'endGame', false, function(){});
 		
         //Say final score
 		this.soundModule.speak("Congratulations! Your final score is" + String(this.score), 'default', false, function(){});
