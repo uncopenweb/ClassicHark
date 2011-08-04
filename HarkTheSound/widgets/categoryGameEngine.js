@@ -390,7 +390,7 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
     _chooseSequence: function(evt) {
         evt.preventDefault();
         if(!this._hasMoved) { //has not yet moved to select  
-			this.sayingAnswerIsWrong=true;console.log(this.sayingAnswerIsWrong); //Failing to select an answer is also a "wrong answer"
+			this.sayingAnswerIsWrong=true; //Failing to select an answer is also a "wrong answer"
 			this.soundModule.speak("You must move through the choices before you can select an answer.", 'default', true, dojo.hitch(this, function(){this.sayingAnswerIsWrong=false;}));
         }
         else { //check if correct
@@ -563,10 +563,10 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
         var responses = ["Try Again", "Oops, try again", "You can do it, try again"];
         var randomResponse = responses[Math.floor(Math.random()*responses.length)];
 		
-		this.sayingAnswerIsWrong=true;console.log(sayingAnswerIsWrong);
+		this.sayingAnswerIsWrong=true;
 		
 		this.soundModule.speak(randomResponse, 'default', true, dojo.hitch(this, function() {
-			this.sayingAnswerIsWrong=false;console.log(sayingAnswerIsWrong);
+			this.sayingAnswerIsWrong=false;
 			
 			if (doHint) {
 				var hints = dojo.map(this.correctThing.Hint, function(item){return item;});
