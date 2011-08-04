@@ -19,7 +19,7 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
 	playingIntroduction: false, //Variables set while certain (potentially) long sounds are playing, in order to allow volume adjustment during them
 	playingPreQuestion: false,
 	playingQuestion: 'false',
-	sayingAnswerIsWrong: false,
+	sayingAnswerIsWrongState: 0, //'0' means false, '1' means true, '2' is used in case up arrow key is pressed in the middle of speech about wrong answer
 	playingVictorySound: false,
 	playingHint: false,
 	
@@ -111,7 +111,7 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
 		this.soundModule.soundVolume=prefs.soundVolume;
 		
 		//Adjust sound volume in middle of long sounds
-		if(this.playingIntroduction || this.playingPreQuestion || this.sayingAnswerIsWrong || this.playingHint || this.playingQuestion=='saying')
+		if(this.playingIntroduction || this.playingPreQuestion || this.sayingAnswerIsWrongState || this.playingHint || this.playingQuestion=='saying')
 			this.soundModule.getAudio().setProperty({name : 'volume', value : this.soundModule.masterVolume*this.soundModule.speechVolume, immediate : true});
 			
 		else if(this.playingVictorySound || this.playingQuestion=='playing')
@@ -394,11 +394,11 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
         var responses = ["Try Again", "Oops, try again", "You can do it, try again"];
         var randomResponse = responses[Math.floor(Math.random()*responses.length)];
 		
-		this.sayingAnswerIsWrong=true;console.log("sayingAnswerIsWrong: "+this.sayingAnswerIsWrong);
+		this.sayingAnswerIsWrongState+=1;console.log("sayingAnswerIsWrongState: "+this.sayingAnswerIsWrongState);
 		
         var def = this.sayOrPlay(randomResponse);
         def.callAfter(dojo.hitch(this, function() {
-			this.sayingAnswerIsWrong=false;console.log("sayingAnswerIsWrong: "+this.sayingAnswerIsWrong);
+			this.sayingAnswerIsWrongState-=1;console.log("sayingAnswerIsWrongState: "+this.sayingAnswerIsWrongState);
 			
             if (doHint) {
                 var hints = dojo.map(this._currentChoices[this._correctChoiceIndex].Hint, function(item) {return item;});
@@ -522,8 +522,8 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
     _chooseSequence: function(evt) {
         evt.preventDefault();
         if(!this._hasMoved) { //has not yet moved to select
-			this.sayingAnswerIsWrong=true;console.log("sayingAnswerIsWrong: "+this.sayingAnswerIsWrong); //Failing to select an answer is also a "wrong answer"
-			this.soundModule.speak("You must move through the choices before you can select an answer.", 'default', true, function(){this.sayingAnswerIsWrong=false;console.log("sayingAnswerIsWrong: "+this.sayingAnswerIsWrong);});
+			this.sayingAnswerIsWrongState+=1;console.log("sayingAnswerIsWrongState: "+this.sayingAnswerIsWrongState); //Failing to select an answer is also a "wrong answer"
+			this.soundModule.speak("You must move through the choices before you can select an answer.", 'default', true, function(){this.sayingAnswerIsWrongState-=1;console.log("sayingAnswerIsWrongState: "+this.sayingAnswerIsWrongState);});
         }
         else { //check if correct
             this._questionAttempts++;
