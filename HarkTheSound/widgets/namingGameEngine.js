@@ -384,8 +384,9 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
             var doHint = false;
         }
         this.soundModule.getAudio().stop();
-        var responses = ["Try Again", "Oops, try again", "You can do it, you can do it, try again"];
+        var responses = ["Try Again", "Oops, try again", "You can do it, try again"];
         var randomResponse = responses[Math.floor(Math.random()*responses.length)];
+		
 		this.sayingAnswerIsWrong=true;console.log("sayingAnswerIsWrong: "+this.sayingAnswerIsWrong);
 		
         var def = this.sayOrPlay(randomResponse);
