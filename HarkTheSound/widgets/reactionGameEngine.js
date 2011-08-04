@@ -114,6 +114,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 			console.log(this.soundModule.getAudio().getProperty({name : 'volume', channel : 'endgame'}));
 			this.soundModule.getAudio().setProperty({name : 'volume', value : prefs.volume*prefs.speechVolume, immediate : true});
 			this.soundModule.getAudio().setProperty({name : 'volume', channel : 'endgame', value : prefs.volume*prefs.soundVolume, immediate : true});
+			console.log(this.soundModule.getAudio().getProperty({name : 'volume', channel : 'endgame'}));
 		}
 	},
 
