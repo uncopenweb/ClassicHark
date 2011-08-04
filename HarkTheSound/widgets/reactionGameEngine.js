@@ -112,8 +112,11 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 		//Allow volume adjustment during congratulating at end
 		if(this.playingEndingSounds)
 		{
+			console.log(this.soundModule.getAudio().getProperty({name : 'volume', channel : 'endgame'}));
 			this.soundModule.getAudio().setProperty({name : 'volume', value : this.soundModule.masterVolume*this.soundModule.speechVolume, immediate : true});
 			this.soundModule.getAudio().setProperty({name : 'volume', channel : 'endgame', value : this.soundModule.masterVolume*this.soundModule.soundVolume, immediate : true});
+			console.log(this.soundModule.getAudio().getProperty({name : 'volume', channel : 'endgame'}));
+			console.log("Game Over: "+this._gameIsOver);
 		}
 	},
 
