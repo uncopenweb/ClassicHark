@@ -335,10 +335,10 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
         }
         else { console.log("New Question type added that hasn't been accounted for!!!");}
 		
-		this.playingQuestion=true;
+		this.playingQuestion=true;console.log(this.playingQuestion);
 		
 		this.soundModule.speak(this._currentQuestion, 'default', true, dojo.hitch(this, function() {
-			this.playingQuestion=false;
+			this.playingQuestion=false;console.log(this.playingQuestion);
 		
 			//wait for timeout to accept response
 			setTimeout(dojo.hitch(this, function(){this._waitingForResponse = true;}), this.promptTime*1000);    
