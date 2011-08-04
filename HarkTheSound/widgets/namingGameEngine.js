@@ -17,7 +17,8 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
     soundModule: null,
 	
 	playingIntroduction: false, //Variables set while certain (potentially) long sounds are playing, in order to allow volume adjustment during them
-	playingQuestion: false,
+	playingPreQuestion: false,
+	playingQuestion: 'false',
 	sayingAnswerIsWrong: false,
 	playingVictorySound: false,
 	playingHint: false,
@@ -110,10 +111,10 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
 		this.soundModule.soundVolume=prefs.soundVolume;
 		
 		//Adjust sound volume in middle of long sounds
-		if(this.playingIntroduction || this.playingQuestion || this.sayingAnswerIsWrong || this.playingHint)
+		if(this.playingIntroduction || this.playingPreQuestion || this.sayingAnswerIsWrong || this.playingHint || this.playingQuestion=='saying')
 			this.soundModule.getAudio().setProperty({name : 'volume', value : this.soundModule.masterVolume*this.soundModule.speechVolume, immediate : true});
 			
-		else if(this.playingVictorySound)
+		else if(this.playingVictorySound || this.playingQuestion=='playing')
 			this.soundModule.getAudio().setProperty({name : 'volume', value : this.soundModule.masterVolume*this.soundModule.soundVolume, immediate : true});
 	},
 
@@ -199,11 +200,11 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
         var shallowCopy = dojo.map(this._possibleQuestions, function(item) {return item;}); 
         this._randomize(shallowCopy);
         var toAsk = shallowCopy.pop();
-		this.playingQuestion=true;console.log("playingQuestion: "+this.playingQuestion);
+		this.playingPreQuestion=true;console.log("playingPreQuestion: "+this.playingPreQuestion);
 		
         var def = this.sayOrPlay(toAsk);
         def.callAfter( dojo.hitch(this, function() {
-			this.playingQuestion=false;console.log("playingQuestion: "+this.playingQuestion);
+			this.playingPreQuestion=false;console.log("playingPreQuestion: "+this.playingPreQuestion);
             this.playThingPrompt();
         }));
     },
@@ -214,12 +215,18 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
         var shallowCopy = dojo.map(this._currentThing.Prompt, function(item){return item;});
         this._randomize(shallowCopy);
         var toSay = shallowCopy.pop();
+		this.playingQuestion=(toSay.split("/")[0]=="Sounds" && toSay.split("/").length>1) ? 'playing' : 'saying';console.log("playingQuestion: "+this.playingQuestion);
+		
         var def = this.sayOrPlay(toSay);
-        def.callBefore(dojo.hitch(this, function() {
+        def.callBefore(dojo.hitch(this, function(){
             this.promptNode.innerHTML = "Prompt: "+this.currentPrompt;
             //wait for timeout to accept response
             setTimeout(dojo.hitch(this, function(){this._waitingForResponse = true;}), this.promptTime*1000);
         }));
+		
+		def.callAfter(dojo.hitch(this, function(){
+			this.playingQuestion='false';console.log("playingQuestion: "+this.playingQuestion);
+		}));
     },
     
     //  says or plays the string that is passed in. Assumes that if url passed it, root is "Sounds"
@@ -230,7 +237,7 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
 			var def=this.soundModule.playSound(string, 'default', true, function(){});
 			
 			//If playing question that sounds like speech, set its volume in relation to speech volume, not sound volume
-			if(this.playingQuestion)
+			if(this.playingPreQuestion)
 				this.soundModule.getAudio().setProperty({name : 'volume', value : this.soundModule.masterVolume*this.soundModule.speechVolume, immediate : true});
 				
             this.currentPrompt = "";
