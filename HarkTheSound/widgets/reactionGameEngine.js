@@ -675,11 +675,11 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
         this.ScoreString.innerHTML = "Your final score is: "; //change wording to final score
 		
 		this.playingEndingSounds=true;
-		this.soundModule.playSound(this._oneOf(this.endSounds), 'endGame', false, function()
+		this.soundModule.playSound(this._oneOf(this.endSounds), 'endGame', false, dojo.hitch(this, function()
 		{
-			this._gameIsOver = true;console.log(this._gameIsOver);//disables pause
+			this._gameIsOver = true;//disables pause
 			this.playingEndingSounds=false;
-		});
+		}));
 		
         //Say final score
 		this.soundModule.speak("Congratulations! Your final score is" + String(this.score), 'default', false, function(){});
