@@ -677,7 +677,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 		this.playingEndingSounds=true;
 		this.soundModule.playSound(this._oneOf(this.endSounds), 'endGame', false, function()
 		{
-			this._gameIsOver = true;//disables pause
+			this._gameIsOver = true;console.log(this._gameIsOver);//disables pause
 			this.playingEndingSounds=false;
 		});
 		
