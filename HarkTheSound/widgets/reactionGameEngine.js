@@ -21,6 +21,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 	playingEndingSounds: false,
 	playingGoodMoveSound: false,
 	playingBadMoveSound: false,
+	playingPausedMessage: false,
     gameData: {}, 
 
     constructor: function() {
@@ -107,8 +108,8 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 		this.soundModule.speechVolume=prefs.speechVolume;
 		this.soundModule.soundVolume=prefs.soundVolume;
 		
-		//Allow volume adjustment in middle of "beginning speech", score reads, and messages about bad moves
-		if(this.playingBeginningSpeech || this._currentlyReadingScore || this.playingBadMoveSound)
+		//Allow volume adjustment in middle of "beginning speech", score reads, speech telling user that game is paused, and messages about bad moves
+		if(this.playingBeginningSpeech || this._currentlyReadingScore || this.playingBadMoveSound || playingPausedMessage)
 			this.soundModule.getAudio().setProperty({name : 'volume', value : this.soundModule.masterVolume*this.soundModule.speechVolume, immediate : true});
 		
 		//Allow volume adjustment during sounds played after good moves
@@ -537,10 +538,17 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 		{
 			var pauseMessage = this._oneOf(this.pauseMessages);
 			this.soundModule.getAudio().setProperty({name : 'volume', value : this.soundModule.masterVolume*this.soundModule.speechVolume, immediate : true});
+			this.playingPausedMessage=true;
 			
-			this.soundModule.getAudio().say({text : pauseMessage}).callBefore(dojo.hitch(this, function() 
+			var def=this.soundModule.getAudio().say({text : pauseMessage})
+			def.callBefore(dojo.hitch(this, function() 
 			{
 				this._changeGameImage(this._oneOf(this.pauseImages));
+			}));
+			
+			def.callAfter(dojo.hitch(this, function()
+			{
+				this.playingPausedMessage=false;
 			}));
 		}
     },
