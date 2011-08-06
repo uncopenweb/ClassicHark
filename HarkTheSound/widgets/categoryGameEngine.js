@@ -419,20 +419,20 @@ dojo.declare("widgets.categoryGameEngine", [dijit._Widget, dijit._Templated], {
                 else if (this.hark._isSwitch(this.chooserSwitch, evt)) {
                     this._chooseSequence(evt);
                 }                
-                else if (this.hark._keyIsDownArrow(evt)) {
+                else if (this.hark._keyIsDownArrow(evt) && !evt.shiftKey) {
                     evt.preventDefault();
                     this._askQuestion();
                 }
-                else if (this.hark._keyIsLeftArrow(evt)){ //then attempted to move
+                else if (this.hark._keyIsLeftArrow(evt) && !evt.shiftKey){ //then attempted to move
                     evt.preventDefault();
                     //increment current choice index then read
                     this._decrementChoiceIndex();
                     this._updateDescription();
                 }
-                else if (this.hark._keyIsRightArrow(evt)) { //then attempted to move
+                else if (this.hark._keyIsRightArrow(evt) && !evt.shiftKey) { //then attempted to move
                     this._moveSequence(evt);
                 }
-                else if (this.hark._keyIsUpArrow(evt)) { //then we want to see if correct key hit
+                else if (this.hark._keyIsUpArrow(evt) && !evt.shiftKey) { //then we want to see if correct key hit
                     this._chooseSequence(evt);
                 }
             }

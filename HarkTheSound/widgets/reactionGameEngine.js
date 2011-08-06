@@ -424,7 +424,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
     _analyzeKey: function(evt){	
         if (this._keyHasGoneUp) {
             this._keyHasGoneUp = false;
-            if (this._keyIsLeftArrow(evt) || this._keyIsRightArrow(evt)) { //then we want to see if correct key hit
+            if ((this._keyIsLeftArrow(evt) || this._keyIsRightArrow(evt)) && !evt.shiftKey) { //then we want to see if correct key hit
                 evt.preventDefault();
                 if (this.waitingForResponse) {    // then check to see if correct 
                     this._responseSoundPlayed = true;    //haven't really yet but catches deferred bug in "run"
