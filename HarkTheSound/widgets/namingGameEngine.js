@@ -540,6 +540,7 @@ dojo.declare('widgets.namingGameEngine', [dijit._Widget, dijit._Templated], {
     _analyzeKey: function(evt){	//checks keyStrokes
         if (this._keyHasGoneUp) {
             this._keyHasGoneUp = false;
+			console.log(evt.shiftKey);
             if (this._waitingForResponse) {
                 if(this.hark._keyIsEscape(evt)) {   //destroy widget
                     this.endGame();
