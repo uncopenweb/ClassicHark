@@ -109,7 +109,7 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 		this.soundModule.soundVolume=prefs.soundVolume;
 		
 		//Allow volume adjustment in middle of "beginning speech", score reads, speech telling user that game is paused, and messages about bad moves
-		if(this.playingBeginningSpeech || this._currentlyReadingScore || this.playingBadMoveSound || playingPausedMessage)
+		if(this.playingBeginningSpeech || this._currentlyReadingScore || this.playingBadMoveSound || this.playingPausedMessage)
 			this.soundModule.getAudio().setProperty({name : 'volume', value : this.soundModule.masterVolume*this.soundModule.speechVolume, immediate : true});
 		
 		//Allow volume adjustment during sounds played after good moves
