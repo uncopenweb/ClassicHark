@@ -19,6 +19,8 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
     soundModule: null,
 	playingBeginningSpeech: false,
 	playingEndingSounds: false,
+	playingGoodMoveSound: false,
+	playingBadMoveSound: false,
     gameData: {}, 
 
     constructor: function() {
@@ -105,10 +107,14 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
 		this.soundModule.speechVolume=prefs.speechVolume;
 		this.soundModule.soundVolume=prefs.soundVolume;
 		
-		//Allow volume adjustment in middle of "beginning speech"
-		if(this.playingBeginningSpeech)
+		//Allow volume adjustment in middle of "beginning speech", score reads, and messages about bad moves
+		if(this.playingBeginningSpeech || this._currentlyReadingScore || this.playingBadMoveSound)
 			this.soundModule.getAudio().setProperty({name : 'volume', value : this.soundModule.masterVolume*this.soundModule.speechVolume, immediate : true});
 		
+		//Allow volume adjustment during sounds played after good moves
+		if(this.playingGoodMoveSound)
+			this.soundModule.getAudio().setProperty({name : 'volume', value : this.soundModule.masterVolume*this.soundModule.soundVolume, immediate : true});
+			
 		//Allow volume adjustment during congratulating at end
 		if(this.playingEndingSounds)
 		{
@@ -329,9 +335,13 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
             var words = this._oneOf(this.wrongHitRight);
             break;
         }
-			
+		
+		this.playingBadMoveSound=true;
+		
 		this.soundModule.speak(words, 'default', false, dojo.hitch(this, function() 
         {
+			this.playingBadMoveSound=false;
+			
             if (this._gameHasEnded()) {    //if time has passed call for end
                 this._endGame();
             }
@@ -357,8 +367,12 @@ dojo.declare('widgets.reactionGameEngine', [dijit._Widget, dijit._Templated], {
         var currentTimeForScore = dayForScore.getTime();
         var sound = this._oneOf(this.rewardSounds);
 		
+		this.playingGoodMoveSound=true;
+		
 		this.soundModule.playSound(sound, 'default', false, dojo.hitch(this, function() 
         {
+			this.playingGoodMoveSound=false;
+			
             if (this._gameHasEnded()) {    //if time has passed call for end
                 this._endGame();
             }
