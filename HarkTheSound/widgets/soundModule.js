@@ -2,9 +2,9 @@ dojo.provide('widgets.soundModule');
 
 dojo.declare('widgets.soundModule', null, 
 {
-	masterVolume: 0,
-	speechVolume: 0,
-	soundVolume: 0,
+	masterVolume: 1.0,
+	speechVolume: 1.0,
+	soundVolume: 1.0,
 	_audio: null,
 	
     constructor: function(audio) 
