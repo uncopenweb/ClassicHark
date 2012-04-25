@@ -178,10 +178,21 @@ dojo.declare('harkTheSound', null, {
         def.then(dojo.hitch(this, function(db) {
             var name = gameData[1];
             console.log("query", name);
+            //First try to get game by name (old style)
             var fetch = db.fetch({ 
                 query: {"Name": name}, 
                 onComplete: dojo.hitch(this, function(results) {
-                    this.finishWidgetBuild(results[0], gameData[0]); //gameData[0] is the type
+                    //Then try to get game by id (new style)
+                    if(results.length > 0){
+                        this.finishWidgetBuild(results[0], gameData[0]); //gameData[0] is the type
+                    }else{
+                        db.fetch({ 
+                            query: {"_id": name}, 
+                            onComplete: dojo.hitch(this, function(results) {
+                                this.finishWidgetBuild(results[0], gameData[0]); //gameData[0] is the type
+                            }) 
+                        });
+                    }
                 }) 
             });
         }));   
